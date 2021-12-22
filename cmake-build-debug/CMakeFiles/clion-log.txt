@@ -1,0 +1,4 @@
+/home/hk001/Tool/3_work/clion-2020.2.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/hk001/CLionProjects/PY/PY_TEST
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/hk001/CLionProjects/PY/PY_TEST/cmake-build-debug
