@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/hk001/CLionProjects/PY/PY_TEST/main.cpp" "/home/hk001/CLionProjects/PY/PY_TEST/cmake-build-debug/CMakeFiles/PY_TEST.dir/main.cpp.o"
+  "/home/hk004cpy/CLionProjects/PY/PY_ALL/main.cpp" "/home/hk004cpy/CLionProjects/PY/PY_ALL/cmake-build-debug/CMakeFiles/PY_TEST.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
