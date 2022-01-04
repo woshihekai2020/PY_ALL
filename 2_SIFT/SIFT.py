@@ -73,6 +73,36 @@ def _Sift( img ):
 
         val = []
 
+def _Merge( img1, img2 ):
+    h1, w1, a = np.shape( img1 )
+    h2, w2, a = np.shape( img2 )
+    if h1 < h2:
+        extra = np.array( [ [[0, 0, 0] for i in range( w1 )] for ii in range( h2 - h1 )] )
+        img1 = np.vstack( [img1, extra] )
+    elif h1 > h2 :
+        extra = np.array( [ [[0, 0, 0] for i in range( w2 )] for ii in range( h1 - h2 )] )
+        img2 = np.vstack( [img2, extra] )
+    return np.hstack( [img1, img2] )
+
+def _Match( threshold ):
+    for id in range( len( imgset ) ):
+        x   = []
+        cnt = 0
+        for i in range( lt ):
+            tmp = []
+            for j in range( lt ):
+                sc = np.inner( np.array( ft[i], np.array( ff[id][j]) ) )
+                tmp.append( sc )
+            x.append( [tmp.index( max(tmp) ), max( tmp )] )
+        for a in range( len(x) ):
+            b,s = x[a]
+            if s < threshold :
+                continue;
+            cnt += 1
+            color = (( random.randint(0, 255)),
+                     ( random.randint(0, 255)),
+                     ( random.randint(0, 255)))
+            cv2.line( mgimgs[id], tuple( ct[a] ), tuple( [cc[id][b][0] + w, cc[id][b][1]]), color, 1 )
 
 
 if __name__ == "__main__":
@@ -90,6 +120,18 @@ if __name__ == "__main__":
     cc = []
     ll = []
     ft, ct, lt = _Sift( tgt )
+    for i in range( len(imgset) ):
+        f, c, l = _Sift( imgset[i] )
+        ff.append( f )
+        cc.append( c )
+        ll.append( l )
+
+    w = np.shape( tgt )[1]
+    mgimgs = [_Merge( tgt0, imgset[i] ) for i in range( len(imgset0) )]
+    print( "All Original Pics Processed" )
+
+    _Match( 0.8 )
+
 
 
 
