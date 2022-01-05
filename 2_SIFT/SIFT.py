@@ -1,3 +1,4 @@
+#https://zhuanlan.zhihu.com/p/102272392?utm_source=wechat_session
 
 import cv2
 import numpy as np
@@ -41,16 +42,16 @@ def _Sift( img ):
             y, x = corner
             voting = [0 for i in range(37)]
             for i in range( max(x - bins, 0), min(x + bins + 1, r)):
-                for j in range( max(x - bins, 0), min(y + bins + 1, c )):
+                for j in range( max(y - bins, 0), min(y + bins + 1, c )):
                     k = int(( angle[i][j] + pi) / (pi/18) + 1)
                     if k >= 37:
                         k = 36
                     voting[k] += gradient[i][j]
-
             p = 1
             for i in range(2, 37):
                 if voting[i] > voting[p]:
                     p = i
+            direct.append( (p/18 - 1 - 1/36) * pi )
         return direct
     direct = _Vote()
 
@@ -60,18 +61,49 @@ def _Sift( img ):
                 return 0
             dif = angle[x][y] - theta
             return dif if dif > 0 else dif + 2 * pi
-        def _DB_linear( x, y ):
-            xx, yy = int( x ), int( y )
-            dy1, dy2 = y - yy, yy + 1 - y
-            dx1, dx2 = x - xx, xx + 1 - x
-            val = _theta( xx, yy ) * dx2 * dy2 + _theta(xx + 1, yy) * dx1 *dy2 \
-                + _theta( xx, yy + 1 ) * dx1, dy2 + _theta( xx + 1, yy + 1 ) * dx1 * dy1
+        def _DB_linear(x, y):
+            xx, yy = int(x), int(y)
+            dy1, dy2 = y-yy, yy+1-y
+            dx1, dx2 = x-xx, xx+1-x
+            val = _theta(xx,yy)*dx2*dy2 \
+              + _theta(xx+1,yy)*dx1*dy2 \
+              + _theta(xx,yy+1)*dx2*dy1 \
+              + _theta(xx+1,yy+1)*dx1*dy1
             return val
         y0, x0 = pos
         H = np.array( [ cos(theta), sin(theta)] )
         V = np.array( [-sin(theta), cos(theta)] )
 
         val = []
+        def cnt( x1, x2, y1, y2, xsign, ysign ):
+            voting = [0 for i in range( 9 )]
+            for x in range( x1, x2 ):
+                for y in range( y1, y2 ):
+                    dp = [x * xsign, y * ysign]
+                    p = H * dp[0] + V * dp[1]
+                    bin = int((_DB_linear(p[0]+x0, p[1]+y0))//(pi/4) + 1)
+                    if bin > 8:
+                        bin = 8
+                    voting[bin] += 1
+            return voting[1:]
+
+        bins = (r + c) // 150
+        for xsign in [-1, 1]:
+            for ysign in [-1, 1]:
+                val += cnt(0, bins, 0, bins, xsign, ysign)
+                val += cnt(bins, bins*2, 0, bins, xsign, ysign)
+                val += cnt(bins, bins*2, bins, bins*2, xsign, ysign)
+                val += cnt(0, bins, bins, bins*2, xsign, ysign)
+        return val
+    feature = []
+    for i in range( length ):
+        val = _Feature( corners[i], direct[i] )
+        m   = sum( k * k for k in val ) ** 0.5
+        l   = [k / m  for k in val ]
+        feature.append( l )
+
+    return feature, corners, length
+
 
 def _Merge( img1, img2 ):
     h1, w1, a = np.shape( img1 )
@@ -85,29 +117,74 @@ def _Merge( img1, img2 ):
     return np.hstack( [img1, img2] )
 
 def _Match( threshold ):
-    for id in range( len( imgset ) ):
-        x   = []
+    # for id in range( len( imgset ) ):
+    #     x   = []
+    #     cnt = 0
+    #     for i in range( lt ):
+    #         tmp = []
+    #         for j in range( ll[id] ):
+    #             sc = np.inner( np.array( ft[i] ), np.array(ff[id][j]) )
+    #             tmp.append( sc )
+    #         x.append( [tmp.index( max(tmp) ), max( tmp )] )
+    #     for a in range( len(x) ):
+    #         b,s = x[a]
+    #         if s < threshold :
+    #             continue;
+    #         cnt += 1
+    #         color = (( random.randint(0, 255)),
+    #                  ( random.randint(0, 255)),
+    #                  ( random.randint(0, 255)))
+    #         cv2.line( mgimgs[id], tuple( ct[a] ), tuple( [cc[id][b][0] + w, cc[id][b][1]]), color, 1 )
+    #         #cv2.line( mgimgs[id], tuple(ct[a]),   tuple( [cc[id][b][0] + w,  c[id][b][1]]), color, 1 )
+    #     if cnt > 6:
+    #         cv2.imwrite( "match %d.jpg" % id, mgimgs[id] )
+    #         print( "MATCHED %d" % id )
+    #         img = np.array( mgimgs[id], dtype= 'uint8')
+    #         cv2.namedWindow( "MATCH_RESULT" )
+    #         cv2.imshow( "MATCH_RESULT", img )
+    #         cv2.waitKey( 0 )
+    #         cv2.destroyWindow( "MATCH_RESULT" )
+    #     else:
+    #         print( "not %d" % id )
+    # return
+    for id in range(len(imgset)):
+        x = []
         cnt = 0
-        for i in range( lt ):
+        for i in range(lt):
             tmp = []
-            for j in range( lt ):
-                sc = np.inner( np.array( ft[i], np.array( ff[id][j]) ) )
-                tmp.append( sc )
-            x.append( [tmp.index( max(tmp) ), max( tmp )] )
-        for a in range( len(x) ):
-            b,s = x[a]
-            if s < threshold :
-                continue;
+            for j in range(ll[id]):
+                sc= np.inner(np.array(ft[i]), np.array(ff[id][j]))
+                tmp.append(sc)
+            x.append([tmp.index(max(tmp)), max(tmp)])
+        for a in range(len(x)):
+            b, s = x[a]
+            if s < threshold:
+                continue
             cnt += 1
-            color = (( random.randint(0, 255)),
-                     ( random.randint(0, 255)),
-                     ( random.randint(0, 255)))
-            cv2.line( mgimgs[id], tuple( ct[a] ), tuple( [cc[id][b][0] + w, cc[id][b][1]]), color, 1 )
+            color = ((random.randint(0, 255)),
+                     (random.randint(0, 255)),
+                     (random.randint(0, 255)))
+            cv2.line(mgimgs[id], tuple(ct[a]),tuple([cc[id][b][0] + w, cc[id][b][1]]), color, 1)
+        if cnt > 6:
+            cv2.imwrite("match%d.jpg" % id, mgimgs[id])
+            print("MATCHED %d" % id)
+            img = np.array(mgimgs[id], dtype="uint8")
+            cv2.namedWindow("MATCH_RESULT")
+            cv2.imshow("MATCH_RESULT", img)
+            cv2.waitKey(0)
+            cv2.destroyWindow("MATCH_RESULT")
+
+        else:
+            print("NOT %d" % id)
+
+    return
 
 
 if __name__ == "__main__":
-    tgt0 = cv2.imread( r"", 1 )
-    imgset0 = [ cv2.imread(r"") for i in range( 1, 6 ) ]
+    tgt0 = cv2.imread( r"./img/target.jpg", 1 )
+    imgset0 = [ cv2.imread(r"./img/%d.jpg" %i, 1 ) for i in range( 1, 6 ) ]
+    #print( np.shape(tgt0) )
+    #print(len(imgset0))
 
     r0, c0, a0 = np.shape( tgt0 )
     times = 1.0
@@ -127,7 +204,7 @@ if __name__ == "__main__":
         ll.append( l )
 
     w = np.shape( tgt )[1]
-    mgimgs = [_Merge( tgt0, imgset[i] ) for i in range( len(imgset0) )]
+    mgimgs = [_Merge( tgt0, imgset0[i] ) for i in range( len(imgset0) )]
     print( "All Original Pics Processed" )
 
     _Match( 0.8 )
