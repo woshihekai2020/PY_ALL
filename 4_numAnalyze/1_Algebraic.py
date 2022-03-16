@@ -179,6 +179,42 @@ def EXPcmp():
     print( '\nCheck pivot result: [a]{xLU}-b = \n', np.dot(aOrig, xLU) - bOrig )
 
 
+def gaussSeidel( iterEqs, x, tol= 1.0e-9 ):
+    omega = 1.0
+    k = 10
+    p = 1
+    for i in range( 1, 501 ):
+        xOld = x.copy()
+        x = iterEqs( x, omega )
+        dx = math.sqrt( np.dot(x-xOld, x-xOld) )
+        if dx < tol: return x, i, omega
+        if i == k: dx1 = dx
+        if i == k + p:
+            dx2 = dx
+            omege = 2.0 / (1.0 + math.sqrt(1.0 - (dx2/dx1) ** (1.0/p)))
+    print( 'Gauss-Seidel failed to converge' )
+
+def conjGrad( Av, x, b, tol= 1.0e-9 ):
+    n = len( b )
+    r = b - Av( x )
+    s = r.copy()
+    for i in range( n ):
+        u = Av( s )
+        alpha = np.dot( s, r ) / np.dot( s, u )
+        x = x + alpha * s
+        r = b - Av( s )
+        if( math.sqrt(np.dot(r, r)) ) < tol:
+            break
+        else:
+            beta = -np.dot( r, u )/ np.dot( s, u )
+            s = r + beta * s
+    return x, i
+
+
+
+
+
+
 if __name__ == "__main__":
     #EXPgauss()
     #EXPcholeski()
