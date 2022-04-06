@@ -8,86 +8,90 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
+				<Option working_dir="/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
+				<Option working_dir="/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
+				<Option working_dir="/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="PY_TEST">
-				<Option output="/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/PY_TEST" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
+				<Option output="/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/PY_TEST" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/usr/local/cuda-10.2/targets/aarch64-linux/include"/>
+					<Add directory="."/>
 					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/aarch64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/7/include"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/aarch64-linux-gnu"/>
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 PY_TEST"/>
-					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 PY_TEST"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="PY_TEST/fast">
-				<Option output="/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/PY_TEST" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
+				<Option output="/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/PY_TEST" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/usr/local/cuda-10.2/targets/aarch64-linux/include"/>
+					<Add directory="."/>
 					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/aarch64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/7/include"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/aarch64-linux-gnu"/>
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 PY_TEST/fast"/>
-					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j12 -f &quot;/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 PY_TEST/fast"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/hk/CLionProjects/PY/PY_ALL/main.cpp">
+		<Unit filename="/home/hk005pyc/CLionProjects/PY/PY_ALL/main.cpp">
 			<Option target="PY_TEST"/>
 		</Unit>
-		<Unit filename="/home/hk/CLionProjects/PY/PY_ALL/CMakeLists.txt">
+		<Unit filename="/home/hk005pyc/CLionProjects/PY/PY_ALL/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

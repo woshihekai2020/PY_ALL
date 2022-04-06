@@ -1,3 +1,3 @@
-/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/hk/CLionProjects/PY/PY_ALL/cmake-build-debug/CMakeFiles/PY_TEST.dir
+/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/hk005pyc/CLionProjects/PY/PY_ALL/cmake-build-debug/CMakeFiles/PY_TEST.dir
