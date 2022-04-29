@@ -12,12 +12,13 @@ import os
 import copy
 plt.ion()  #interactivate mode
 
-
-#load data,set proper data sets
+#训练集数据扩充和归一化
+#在验证集上仅需要归一化
+#II: 加载数据,set proper data sets
 data_transforms = {
     'train' : transforms.Compose([
-        transforms.RandomResizedCrop(224),
-        transforms.RandomHorizontalFlip(),
+        transforms.RandomResizedCrop(224), #随机裁剪一个area然后再resize
+        transforms.RandomHorizontalFlip(), #随机水平翻转
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
@@ -37,7 +38,7 @@ class_names = image_datasets['train'].classes
 device = torch.device( "cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-
+#III: 可视化部分图像数据
 def imshow( inp, title= None ):  #imshow for tensor
     inp = inp.numpy().transpose((1, 2, 0))
     mean = np.array([0.485, 0.456, 0.406])
@@ -55,7 +56,7 @@ out = torchvision.utils.make_grid( inputs )
 imshow( out, title= [class_names[x] for x in classes] )
 
 
-
+#IV:训练模型
 def train_model( model, criterion, optimizer, scheduler, num_epochs= 25 ):
     since = time.time()
 
@@ -120,7 +121,7 @@ def train_model( model, criterion, optimizer, scheduler, num_epochs= 25 ):
     return model
 
 
-#一个通用的展示少量预测图片的函数
+#5.可视化模型的预测结果
 def visualize_model( model, num_images= 6 ):
     was_training = model.training
     model.eval()
@@ -153,7 +154,7 @@ def visualize_model( model, num_images= 6 ):
 executeNum = 2
 #1: 微调Convnet
 #2: 将Convnet看成固定的特征提取器
-#微调Convnet：使用预训练的网络初始化自己的网络，而不是随机初始化。其他的训练步骤不变。
+# 1: 微调Convnet：使用预训练的网络初始化自己的网络，而不是随机初始化。其他的训练步骤不变。
 if executeNum == 1 :
     model_ft = models.resnet18( pretrained= True )
     num_ftrs = model_ft.fc.in_features
@@ -170,7 +171,7 @@ if executeNum == 1 :
     model_ft = train_model( model_ft,  criterion, optimizer_ft, exp_lr_scheduler, num_epochs= 25)
     visualize_model( model_ft )
 
-#将Convnet看成固定的特征提取器:首先固定ConvNet除了最后的全连接层外的其他所有层。
+#2: 将Convnet看成固定的特征提取器:首先固定ConvNet除了最后的全连接层外的其他所有层。
 #最后的全连接层被替换成一个新的随机 初始化的层，只有这个新的层会被训练[只有这层参数会在反向传播时更新]
 if executeNum == 2 :
     model_conv = torchvision.models.resnet18( pretrained= True )
