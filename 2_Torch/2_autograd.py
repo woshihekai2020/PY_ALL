@@ -1,3 +1,4 @@
+##https://www.pytorch123.com/SecondSection/autograd_automatic_differentiation/
 import torch
 
 # 1: tensor follow compute EXP
