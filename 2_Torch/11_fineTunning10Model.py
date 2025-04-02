@@ -289,7 +289,7 @@ def compareModel():
     scratch_model = scratch_model.to(device)
     scratch_optimizer = optim.SGD(scratch_model.parameters(), lr=0.001, momentum=0.9)
     scratch_criterion = nn.CrossEntropyLoss()
-    _, scratch_hist = train_model(scratch_model, dataloaders_dict, scratch_criterion, scratch_optimizer,
+    _, scratch_hist = train_model(scratch_model, loadData().dataloaders_dict, scratch_criterion, scratch_optimizer,
                                   num_epochs=num_epochs, is_inception=(model_name == "inception"))
 
     # 绘制验证精度的训练曲线与转移学习方法
