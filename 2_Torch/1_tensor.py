@@ -1,4 +1,5 @@
 #https://www.pytorch123.com/SecondSection/what_is_pytorch/
+# 什么是 PyTorch?
 from __future__ import print_function
 import torch
 
