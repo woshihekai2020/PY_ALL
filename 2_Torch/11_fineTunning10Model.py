@@ -14,16 +14,16 @@ import matplotlib.pyplot as plt
 import time
 import os
 import copy
+###################################################################################################### 1: 导包并打印版本号
 print("PyTorch Version: ", torch.__version__)
 print("Torchvision Version: ", torchvision.__version__)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-# 1:下载数据
+############################################################################################################## 2:下载数据
 import os
 rootDir = './DATA/11_data'
 os.makedirs(rootDir, exist_ok= True)
-import wget
-#这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
+import wget #这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
 url = "https://download.pytorch.org/tutorial/hymenoptera_data.zip"
 filePath = rootDir + '/hymenoptera_data.zip'
 if ( not os.path.isfile( filePath ) ):
@@ -37,7 +37,7 @@ zip_file.extractall( extract_path )
 zip_file.close()
 
 
-# 2: 训练模型
+######################################################################################################## 3: 输入并训练模型
 # 顶级数据目录。 这里我们假设目录的格式符合ImageFolder结构
 data_dir = rootDir + "/hymenoptera_data"
 # 从[resnet, alexnet, vgg, squeezenet, densenet, inception]中选择模型
@@ -50,7 +50,6 @@ batch_size = 8
 num_epochs = 15
 # 用于特征提取的标志。 当为False时，我们微调整个模型，# 当True时我们只更新重新形成的图层参数
 feature_extract = True
-
 def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False):
     since = time.time()
 
@@ -123,8 +122,14 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
     model.load_state_dict(best_model_wts)
     return model, val_acc_history
 
-
-# 4: 重塑代码
+####################################################################################################### 4: 初始化并重塑代码
+# 4.1:Resnet
+# 4.1:Alexnet
+# 4.3:VGG
+# 4.4:Squeezenet
+# 4.5:Densenet
+# 4.6:Inception v3
+# 4.7:重塑代码
 def set_parameter_requires_grad(model, feature_extracting):
     if feature_extracting:
         for param in model.parameters():
@@ -208,8 +213,7 @@ def ExpInitReshapeNet():
     # 打印我们刚刚实例化的模型
     print(model_ft)
 
-
-# 5: 加载数据
+############################################################################################################# 5: 加载数据
 def loadData():
     # 在这步中初始化模型
     model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
@@ -243,8 +247,7 @@ def loadData():
     # 检测我们是否有可用的GPU
     # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
-# 6: 创建优化器
+############################################################################################################ 6: 创建优化器
 def createOptimizer():
     # 在这步中初始化模型
     model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
@@ -270,8 +273,7 @@ def createOptimizer():
     # 观察所有参数都在优化
     optimizer_ft = optim.SGD(params_to_update, lr=0.001, momentum=0.9)
 
-
-# 7:运行训练和验证
+######################################################################################################### 7:运行训练和验证
 def tainAndValidation():
     # 在这步中初始化模型
     model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
@@ -282,7 +284,8 @@ def tainAndValidation():
     model_ft, hist = train_model(model_ft, loadData().dataloaders_dict, criterion, createOptimizer().optimizer_ft,
                                  num_epochs=num_epochs, is_inception=(model_name == "inception"))
 
-# 8: 对比从头开始模型:不使用迁移学习,微调与特征提取的性能在很大程度上取决于数据集.总体优于从头开始训练。
+###################################################################################################### 8: 对比从头开始模型
+#不使用迁移学习,微调与特征提取的性能在很大程度上取决于数据集.总体优于从头开始训练。
 def compareModel():
     # 初始化用于此运行的模型的非预训练版本
     scratch_model, _ = initialize_model(model_name, num_classes, feature_extract=False, use_pretrained=False)
@@ -309,7 +312,6 @@ def compareModel():
     plt.xticks(np.arange(1, num_epochs + 1, 1.0))
     plt.legend()
     plt.show()
-
 
 if __name__=="__main__":
     ExpInitReshapeNet()
