@@ -68,11 +68,10 @@ model = onnx.load("super_resolution.onnx")                      #加载ONNX Mode
 
 # 其他ONNX后端，如CNTK的后端即将推出。
 prepared_backend = onnx_caffe2_backend.prepare(model)     # 为执行模型准备caffe2后端，将ONNX模型转换为可以执行它的Caffe2 NetDef。
-# 在Caffe2中运行模型
-# 构造从输入名称到Tensor数据的映射。
-# 模型图形本身包含输入图像之后所有权重参数的输入。由于权重已经嵌入，我们只需要传递输入图像。
-# 设置第一个输入。
-W = {model.graph.input[0].name: x.data.numpy()}
+
+
+W = {model.graph.input[0].name: x.data.numpy()}                          # 在Caffe2中运行模型 构造从输入名称到Tensor数据的映射。
+                              # 模型图形本身包含输入图像之后所有权重参数的输入。由于权重已经嵌入，我们只需要传递输入图像。设置第一个输入。
 
 c2_out = prepared_backend.run(W)[0]                                                                     # 运行Caffe2 net:
 

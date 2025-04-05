@@ -25,7 +25,7 @@ os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
 USE_CUDA = torch.cuda.is_available()
 device = torch.device("cuda" if USE_CUDA else "cpu")
 
-###################################################################################################### 2: 加载和预处理数据
+####################################################### 2: 加载和预处理数据
 """
 from convokit import Corpus,download
 #https://convokit.cornell.edu/documentation/movie.html
@@ -44,7 +44,8 @@ def printLines( file, n=10 ):
         print( line )
 printLines( os.path.join(corpus, "movie_lines.txt") )
 
-################################################################################################### 2.1: 创建格式化数据文件
+
+####################################################### 2.1: 创建格式化数据文件
 def loadLines( fileName, fields ):                                                            # 将文件的每一行拆分为字段字典。
     lines = {}
     with open( fileName, 'r', encoding= 'iso-8859-1' ) as f:
@@ -85,21 +86,20 @@ def extractSentencePairs( conversations ):                                      
                 qa_pairs.append([inputLine, targetLine])
     return qa_pairs
 
-# 定义新文件的路径。
-datafile = os.path.join( corpus, "formatted_movie_lines.txt" )
+datafile = os.path.join( corpus, "formatted_movie_lines.txt" )                                           # 定义新文件的路径。
 delimiter = "\t"
 delimiter = str( codecs.decode( delimiter, "unicode_escape") )
-# 初始化行dict，对话列表和字段ID
-lines = {}
+
+lines = {}                                                                                  # 初始化行dict，对话列表和字段ID。
 conversations = []
 MOVIE_LINES_FIELDS = ["lineID", "characterID", "movieID", "character", "text"]
 MOVIE_CONVERSATIONS_FIELDS = ["character1ID", "character2ID", "movieID", "utteranceIDs"]
-# 加载行和进程对话
-print("\nProcessing corpus...")
+
+print("\nProcessing corpus...")                                                                          # 加载行和进程对话。
 lines = loadLines( os.path.join( corpus, "movie_lines.txt"), MOVIE_LINES_FIELDS )
 print("\n Loading conversations")
 conversations = loadConversations( os.path.join(corpus, "movie_conversations.txt"), lines, MOVIE_CONVERSATIONS_FIELDS)
-# 打印一个样本的行
+
 """
     # 写入新的csv文件
     print("\nWriting newly formatted file...")
@@ -108,12 +108,12 @@ conversations = loadConversations( os.path.join(corpus, "movie_conversations.txt
         for pair in extractSentencePairs(conversations):
             writer.writerow(pair)
 """
-print("\nSample lines from file:")
+print("\nSample lines from file:")                                                                       # 打印一个样本的行
 printLines(datafile)
 
-###################################################################################################### 2.2: 加载和清洗数据
-# 默认词向量
-PAD_token = 0  # Used for padding short sentences
+
+####################################################### 2.2: 加载和清洗数据
+PAD_token = 0  # Used for padding short sentences                                                             # 默认词向量
 SOS_token = 1  # Start-of-sentence token
 EOS_token = 2  # End-of-sentence token
 class Voc:
@@ -183,8 +183,8 @@ def loadPrepareData(corpus, corpus_name, datafile, save_dir):               # �
         voc.addSentence(pair[1])
     print("Counted words:", voc.num_words)
     return voc, pairs
- # 加载/组装voc和对
-save_dir = os.path.join("data", "save")
+
+save_dir = os.path.join("data", "save")                                                                 # 加载/组装voc和对
 voc, pairs = loadPrepareData(corpus, corpus_name, datafile, save_dir)
 # 打印一些对进行验证
 print("\npairs:")
@@ -192,7 +192,8 @@ for pair in pairs[:10]:
     print(pair)
 print( "\n \n")
 
-# 另一种有利于让训练更快收敛的策略是去除词汇表中很少使用的单词。减少特征空间也会降低模型学习目标函数的难度。
+# 另一种有利于让训练更快收敛的策略是去除词汇表中很少使用的单词。
+# 减少特征空间也会降低模型学习目标函数的难度。
 MIN_COUNT = 3                                                                                          # 修剪的最小字数阈值
 def trimRareWords(voc, pairs, MIN_COUNT):
 
@@ -218,9 +219,11 @@ def trimRareWords(voc, pairs, MIN_COUNT):
     print("Trimmed from {} pairs to {}, {:.4f} of total"
           .format(len(pairs), len(keep_pairs), len(keep_pairs) / len(pairs)))
     return keep_pairs
+
 pairs = trimRareWords(voc, pairs, MIN_COUNT)                                                                # 修剪voc和对
 
-######################################################################################################### 3.为模型准备数据
+
+####################################################### 3.为模型准备数据
 def indexesFromSentence(voc, sentence):
     return [voc.word2index[word] for word in sentence.split(' ')] + [EOS_token]
 
@@ -263,17 +266,17 @@ def batch2TrainData(voc, pair_batch):                                           
     inp, lengths = inputVar(input_batch, voc)
     output, mask, max_target_len = outputVar(output_batch, voc)
     return inp, lengths, output, mask, max_target_len
- # 验证例子
-small_batch_size = 5
+
+small_batch_size = 5                                                                                           # 验证例子
 batches = batch2TrainData(voc, [random.choice(pairs) for _ in range(small_batch_size)])
 input_variable, lengths, target_variable, mask, max_target_len = batches
+
 print("input_variable:", input_variable)
 print("lengths:", lengths)
 print("target_variable:", target_variable)
 print("mask:", mask)
 print("max_target_len:", max_target_len)
-
-############################################################################################################## 4.定义模型
+####################################################### 4.定义模型
 #4.1 Seq2Seq模型
 #4.2 编码器
 class EncoderRNN(nn.Module):
@@ -336,8 +339,8 @@ class Attn(torch.nn.Module):                                                    
 
         # Return the softmax normalized probability scores (with added dimension)
         return F.softmax(attn_energies, dim=1).unsqueeze(1)
-#    计算图
-class LuongAttnDecoderRNN(nn.Module):
+
+class LuongAttnDecoderRNN(nn.Module):                                                                            # 计算图
     def __init__(self, attn_model, embedding, hidden_size, output_size, n_layers=1, dropout=0.1):
         super(LuongAttnDecoderRNN, self).__init__()
 
@@ -375,7 +378,7 @@ class LuongAttnDecoderRNN(nn.Module):
         output = F.softmax(output, dim=1)
         # 返回输出和在最终隐藏状态
         return output, hidden
-########################################################################################################### 5.定义训练步骤
+####################################################### 5.定义训练步骤
 #5.1 Masked 损失
 def maskNLLLoss(inp, target, mask):
     nTotal = mask.sum()
@@ -496,7 +499,7 @@ def trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, deco
                 'voc_dict': voc.__dict__,
                 'embedding': embedding.state_dict()
             }, os.path.join(directory, '{}_{}.tar'.format(iteration, 'checkpoint')))
-############################################################################################################# #6.评估定义
+####################################################### #6.评估定义
 #6.1 贪婪解码
 class GreedySearchDecoder(nn.Module):
     def __init__(self, encoder, decoder):
@@ -562,7 +565,7 @@ def evaluateInput(encoder, decoder, searcher, voc):
 
         except KeyError:
             print("Error: Encountered unknown word.")
-############################################################################################################# #7.运行模型
+####################################################### #7.运行模型
 # 配置模型
 model_name = 'cb_model'
 attn_model = 'dot'
@@ -607,7 +610,7 @@ if loadFilename:
 encoder = encoder.to(device)
 decoder = decoder.to(device)
 print('Models built and ready to go!')
-
+#######################################################
 #7.1 执行训练
 # 配置训练/优化
 clip = 50.0
@@ -641,12 +644,14 @@ trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_
 #在torch\nn\utils\rnn.py 第244行附近
 #   _VF._pack_padded_sequence(input, lengths, batch_first)
 #   改为 _VF._pack_padded_sequence(input, lengths.cpu(), batch_first)
-
+#######################################################
 #7.2 运行评估
+
 encoder.eval()                                                                            # 将dropout layers设置为eval模式
 decoder.eval()
 
 searcher = GreedySearchDecoder(encoder, decoder)                                                          # 初始化探索模块
+
 # evaluateInput(encoder, decoder, searcher, voc)                                        # 开始聊天（取消注释并运行以下行开始）
 
 

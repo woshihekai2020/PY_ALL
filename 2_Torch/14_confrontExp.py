@@ -11,11 +11,12 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-#################################################################################################################1: 输入
+#1: 输入
 import os
 rootDir = './DATA/14_data'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
-import wget #这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
+import wget
+#这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
 #url = "https://drive.google.com/drive/folders/1fn83DF14tWmit0RTKWRhPq5uVXt73e0h?usp=sharing"
 #google pan : NOT WORK
 filePath = rootDir + '/lenet_mnist_model.pth'
@@ -25,7 +26,9 @@ epsilons = [0, .05, .1, .15, .2, .25, .3]                   #epsilon越大，扰
 pretrained_model = filePath #"data/lenet_mnist_model.pth"
 use_cuda=True
 
-###########################################################################################################2: 被攻击的模型
+
+
+#2: 被攻击的模型
 class Net(nn.Module):   # 定义LeNet模型
     def __init__(self):
         super(Net, self).__init__()
@@ -57,7 +60,9 @@ model.load_state_dict(torch.load(pretrained_model, map_location='cpu'))
 # 在评估模式下设置模型。在这种情况下，这适用于Dropout图层
 model.eval()
 
-##########################################################################################################3: FGSM算法攻击
+
+
+#3: FGSM算法攻击
 # FGSM算法攻击代码
 def fgsm_attack(image, epsilon, data_grad):
     # 收集数据梯度的元素符号
@@ -69,7 +74,9 @@ def fgsm_attack(image, epsilon, data_grad):
     # 返回被扰动的图像
     return perturbed_image
 
-##############################################################################################################4: 测试函数
+
+
+#4: 测试函数
 def test( model, device, test_loader, epsilon ):
     # 精度计数器
     correct = 0
@@ -117,7 +124,9 @@ def test( model, device, test_loader, epsilon ):
     # 返回准确性和对抗性示例
     return final_acc, adv_examples
 
-##############################################################################################################5: 运行攻击
+
+
+#5: 运行攻击
 accuracies = []
 examples = []
 # 对每个epsilon运行测试
@@ -126,7 +135,9 @@ for eps in epsilons:
     accuracies.append(acc)
     examples.append(ex)
 
-##################################################################################################################6: 结果
+
+
+#6: 结果
 plt.figure(figsize=(5,5))
 plt.plot(epsilons, accuracies, "*-")
 plt.yticks(np.arange(0, 1.1, step=0.1))
@@ -136,7 +147,9 @@ plt.xlabel("Epsilon")
 plt.ylabel("Accuracy")
 plt.show()
 
-#######################################################################7: 样本对抗性示例: 在每个epsilon上绘制几个对抗样本的例子
+
+
+#7: 样本对抗性示例: 在每个epsilon上绘制几个对抗样本的例子
 cnt = 0
 plt.figure(figsize=(8,10))
 for i in range(len(epsilons)):

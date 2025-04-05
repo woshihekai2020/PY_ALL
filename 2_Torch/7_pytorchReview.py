@@ -5,11 +5,7 @@ import torch
 import random
 #PyTorch的核心是两个主要特征：一个n维张量，类似于numpy，但可以在GPU上运行; 搭建和训练神经网络时的自动微分/求导机制
 
-############################################################################################ 1: PyTorch的核心是两个主要特征
-#一个n维张量，类似于numpy，但可以在GPU上运行
-#搭建和训练神经网络时的自动微分/求导机制
-################################################################################################################## 2:张量
-# 2.1:热身:Numpy
+# 1: Numpy info
 def numpyInfo():  # raw循环次数 is 500
     N, D_in, H, D_out = 64, 1000, 100, 10           # N是批量大小; D_in是输入维度; H是隐藏层维度; D_out是输出维度
 
@@ -38,7 +34,7 @@ def numpyInfo():  # raw循环次数 is 500
         W1 -= learing_rate * grad_w1                # 更新权重
         W2 -= learing_rate * grad_w2
    
-# 2.2: Pytorch:张量，
+# 2: Tensor Acc:张量，
 # pytorch概念，类似于numpy，但可以在GPU上运行，获取50倍以上加速。not run on AGX
 def tensorAcc():  # raw循环次数 is 500
     dtype = torch.float
@@ -73,8 +69,7 @@ def tensorAcc():  # raw循环次数 is 500
   
 # 3: Auto Grad
 
-############################################################################################################## 3：自动求导
-# 3.1:Pytorch:张量和自动求导,# not run on AGX
+# 3：自动求导:                                                                 not run on AGX
 def autoGrad():
     dtype = torch.float
     device = torch.device( "cuda:0" )
@@ -106,9 +101,9 @@ def autoGrad():
             W1.grad.zero_()                                                         # 反向传播后手动将梯度设置为零
             W2.grad.zero_()
 
-# 3.2: PyTorch：定义新的自动求导函数
+# 4: 自定义优化方法：Self Define Auto Grad
+# 建立torch.autograd的子类来实现我们自定义的autograd函数，完成张量的正向和反向传播。
 def selfDefineAutoGrad():
-    # 建立torch.autograd的子类来实现我们自定义的autograd函数，完成张量的正向和反向传播。
     class MyReLU( torch.autograd.Function ):
         @staticmethod                        #important
         def forward( ctx, x ):
@@ -147,13 +142,12 @@ def selfDefineAutoGrad():
             W1.grad.zero_()                                             # 在反向传播之后手动清零梯度
             W2.grad.zero_()
 
-# 3.3: 静态图与动态图：TensorFlow static graph. like autoGrad in pytorch
+# 5: 静态图与动态图：TensorFlow static graph. like autoGrad in pytorch
 # pytorch与tensorflow的区别在于，pytorch是动态图，tensorflow是静态图。本例使用tensorflow，无法运行。
 
-################################################################################################################ 4:nn模块
-# 4.1 PyTorch：nn
-def infoNNmodule():
-    # nn包中定义一组大致等价于层的模块。输入tensor输出tensor。也定义了一组损失函数，用以训练神经网络。
+# 6:模块层： nn module
+# nn包中定义一组大致等价于层的模块。输入tensor输出tensor。也定义了一组损失函数，用以训练神经网络。
+def infoNNmodule(): 
     N, D_in, H, D_out = 64, 1000, 100, 10                       # N是批量大小; D_in是输入维度; H是隐藏层维度; D_out是输出维度
 
     x = torch.randn( N, D_in )                                  # 输入
@@ -180,9 +174,9 @@ def infoNNmodule():
             for param in model.parameters():
                 param -= learning_rate * param.grad
 
-# 4.2: Pytorch：optim
+# 7: 复杂优化器：optim module
+# 对于随机梯度下降(SGD）可手动改变参数张量来更新模型权重。实践中使用复杂优化器训练。
 def infoOptim():
-    # 对于随机梯度下降(SGD）可手动改变参数张量来更新模型权重。实践中使用复杂优化器训练。
     N, D_in, H, D_out = 64, 1000, 100, 10
 
     x = torch.randn( N, D_in )
@@ -209,7 +203,7 @@ def infoOptim():
 
         optimizer.step()                            # 调用Optimizer的step函数使它所有参数更新
       
-# 4.3: PyTorch：自定义nn模块
+# 8: 自定义nn层模块：self define nn module
 def selfDefineNNmodule():
     class TwoLayerNet( torch.nn.Module ):
         def __init__( self, D_in, H, D_out ):
@@ -241,9 +235,9 @@ def selfDefineNNmodule():
         loss.backward()                                             # 反向传播
         optimizer.step()                                            # 更新权重
 
-# 4.4: PyTorch：控制流和权重共享
+# 9: 控制流与权重共享：pytorch control flow
+# 通过在定义转发时多次重用同一个模块来实现最内层之间的权重共享。pytorch支持控制流和权重共享。可以在模型的前向传播中使用python控制流。
 def pytorchControlFlow():
-    # 通过在定义转发时多次重用同一个模块来实现最内层之间的权重共享。pytorch支持控制流和权重共享。可以在模型的前向传播中使用python控制流。
     class DynamicNet( torch.nn.Module ):
         # 三个nn.Linear实例，它们将在前向传播时被使用。
         def __init__( self, D_in, H, D_out ):

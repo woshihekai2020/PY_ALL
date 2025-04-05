@@ -1,16 +1,13 @@
 #https://www.pytorch123.com/FourSection/ObjectDetectionFinetuning/
 #微调基于 torchvision 0.3的目标检测模型
-import os
-import wget
-import numpy as np
-import torch
-from PIL import Image
-############################################################################################################ 1:下载数据集
+# 1:下载数据集
 rootDir = './DATA/10_data'
+import os
 os.makedirs(rootDir, exist_ok= True)
 #这里有11种方法，供你用Python下载文件.https://zhuanlan.zhihu.com/p/587382385
 url = "https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip"
 filePath = rootDir + '/PennFudanPed.zip'
+import wget
 if ( not os.path.isfile( filePath ) ):
     wget.download(url, filePath )
 #python zip解压文件到指定文件夹 https://blog.51cto.com/u_16175474/7867250
@@ -20,7 +17,11 @@ zip_file = zipfile.ZipFile(zip_path, 'r')
 extract_path = rootDir
 zip_file.extractall( extract_path )
 
-######################################################################################################### 2:为数据集编写类
+# 2:为数据集编写类
+import os
+import numpy as np
+import torch
+from PIL import Image
 class PennFudanDataset(object):
     def __init__(self, root, transforms):
         self.root = root
@@ -88,11 +89,11 @@ class PennFudanDataset(object):
     def __len__(self):
         return len(self.imgs)
 
-############################################################################################################## 3:定义模型
-# PennFudan 数据集的实例分割模型
-import torchvision  #微调已训练的模型
+# 3.1：微调已训练的模型
+import torchvision
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
+
 def get_model_instance_segmentation(num_classes): # PennFudan 数据集的实例分割模型
     # 加载在COCO上预训练的预训练的实例分割模型
     model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
@@ -108,7 +109,8 @@ def get_model_instance_segmentation(num_classes): # PennFudan 数据集的实例
     model.roi_heads.mask_predictor = MaskRCNNPredictor(in_features_mask, hidden_layer, num_classes)
     return model
 
-# 修改模型以添加不同的主干
+
+# 3.2：修改模型以添加不同的主干
 import torchvision
 from torchvision.models.detection import FasterRCNN
 from torchvision.models.detection.rpn import AnchorGenerator
@@ -135,7 +137,7 @@ def modify_model_add_backbone():
     return model
 
 
-################################################################################################################# 4: 整合
+#### 4: 整合
 # 4.1 为数据扩充/转换编写辅助函数
 import part_10_transforms as T
 def get_transform(train):

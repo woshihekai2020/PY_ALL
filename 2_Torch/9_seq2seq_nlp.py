@@ -5,7 +5,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 from json import encoder
-#rom unittest.util import _MAX_LENGTH
+from unittest.util import _MAX_LENGTH
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -13,25 +13,24 @@ import re
 import os
 import unicodedata
 import numpy as np
-MAX_LENGTH = 10
-########################################################################################################### 1: 下载数据集
+
+import os
 rootDir = './DATA/9_data'
 os.makedirs(rootDir, exist_ok= True)
-import wget #这里有11种方法，供你用Python下载文件,https://zhuanlan.zhihu.com/p/587382385
+#这里有11种方法，供你用Python下载文件,https://zhuanlan.zhihu.com/p/587382385
+import wget
 url = "https://download.pytorch.org/models/tutorials/4000_checkpoint.tar"
 filePath = rootDir + '/4000_checkpoint.tar'
 if ( not os.path.isfile( filePath ) ):
     wget.download(url, filePath )
-############################################################################################################# 2: 预备环境
+
 device = torch.device( "cpu" )
 MAX_LENGTH = 10 # 最大句子长度
 PAD_token  = 0  # 默认的词向量
 SOS_token  = 1
 EOS_token  = 2
 
-############################################################################################################# 3: 模型概述
-
-############################################################################################################# 4：数据处理
+# 4：数据处理
 class Voc:
     def __init__(self, name):
         self.name = name
@@ -87,7 +86,8 @@ def normalizeString(s):
 def indexesFromSentence(voc, sentence):
     return [voc.word2index[word] for word in sentence.split(' ')] + [EOS_token]
 
-############################################################################################################ 5：定义编码器
+
+# 5：定义编码器
 class EncoderRNN(nn.Module):
     def __init__(self, hidden_size, embedding, n_layers=1, dropout=0):
         super(EncoderRNN, self).__init__()
@@ -114,7 +114,8 @@ class EncoderRNN(nn.Module):
         # 返回输出以及最终的隐藏状态
         return outputs, hidden
 
-################################################################################################## 6：定义解码器的注意力模块
+
+# 6：6.定义解码器的注意力模块
 class Attn(torch.nn.Module):
     def __init__(self, method, hidden_size):
         super(Attn, self).__init__()
@@ -154,7 +155,8 @@ class Attn(torch.nn.Module):
         # 返回softmax归一化概率分数（增加维度）
         return F.softmax(attn_energies, dim=1).unsqueeze(1)
 
-############################################################################################################ 7：定义解码器
+
+# 7：定义解码器
 class LuongAttnDecoderRNN(nn.Module):
     def __init__(self, attn_model, embedding, hidden_size, output_size, n_layers=1, dropout=0.1):
         super(LuongAttnDecoderRNN, self).__init__()
@@ -169,6 +171,7 @@ class LuongAttnDecoderRNN(nn.Module):
         self.gru = nn.GRU(hidden_size, hidden_size, n_layers, dropout=dropout)
         self.out = nn.Linear(hidden_size, output_size)
         self.dropout = nn.Dropout(dropout)
+
     def forward(self, input_step, last_hidden, encoder_outputs):
         # 获取嵌入
         embedded = self.embedding(input_step)
@@ -192,8 +195,8 @@ class LuongAttnDecoderRNN(nn.Module):
         # 返回输出和隐藏状态
         return output, hidden, attn_weights
 
-############################################################################################################## 8:定义评估
-# 8.1：贪婪搜索解码器
+
+# 8.1：定义评估，贪婪搜索解码器
 class GreedySearchDecoder( torch.jit.ScriptModule ):
     def __init__( self, encoder, decoder, decoder_n_layers ):
         super(GreedySearchDecoder, self).__init__()
@@ -230,6 +233,7 @@ class GreedySearchDecoder( torch.jit.ScriptModule ):
         # 返回收集到的词tokens和分数
         return all_tokens, all_scores
 
+
 # 8.2：输入评估
 # 接受一个字符串输入语句作为参数，对其进行规范化、计算并输出响应。
 def evaluate(encoder, decoder, searcher, voc, sentence, max_length=MAX_LENGTH):
@@ -248,6 +252,7 @@ def evaluate(encoder, decoder, searcher, voc, sentence, max_length=MAX_LENGTH):
     # indexes -> words
     decoded_words = [voc.index2word[token.item()] for token in tokens]
     return decoded_words
+
 # 评估来自用户输入的输入(stdin)
 def evaluateInput(encoder, decoder, searcher, voc):
     input_sentence = ''
@@ -267,6 +272,7 @@ def evaluateInput(encoder, decoder, searcher, voc):
 
         except KeyError:
             print("Error: Encountered unknown word.")
+
 # 规范化输入句子并调用evaluate()
 def evaluateExample(sentence, encoder, decoder, searcher, voc):
     print("> " + sentence)
@@ -277,7 +283,8 @@ def evaluateExample(sentence, encoder, decoder, searcher, voc):
     output_words[:] = [x for x in output_words if not (x == 'EOS' or x == 'PAD')]
     print('Bot:', ' '.join(output_words))
 
-######################################################################################################## 9：加载预训练参数
+
+# 9：加载预训练参数
 encoder = 0
 decoder = 0
 voc = Voc(0)
