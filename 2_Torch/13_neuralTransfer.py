@@ -15,9 +15,9 @@ import copy
 import os
 rootDir = './DATA/13_data'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
-# 1: 导包并选择设备
-import wget
-#这里有11种方法，供你用Python下载文件 https://zhuanlan.zhihu.com/p/587382385
+
+######################################################################################################## 1: 导包并选择设备
+import wget #这里有11种方法，供你用Python下载文件 https://zhuanlan.zhihu.com/p/587382385
 #download from:  https://pytorch.org/tutorials/advanced/neural_style_tutorial.html
 url = "https://pytorch.org/tutorials/_static/img/neural-style/picasso.jpg"
 filePath = rootDir + '/picasso.jpg'
@@ -30,8 +30,7 @@ if ( not os.path.isfile( filePath_dancing ) ):
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
-#2: 加载图片
+##############################################################################################################2: 加载图片
 # 所需的输出图像大小
 imsize = 512 if torch.cuda.is_available() else 128  # use small size if no gpu
 loader = transforms.Compose([
@@ -63,8 +62,7 @@ imshow(style_img, title='Style Image')
 plt.figure()
 imshow(content_img, title='Content Image')
 
-
-#3: 内容损失
+##############################################################################################################3: 内容损失
 class ContentLoss(nn.Module):
     def __init__(self, target,):
         super(ContentLoss, self).__init__()
@@ -76,9 +74,7 @@ class ContentLoss(nn.Module):
         self.loss = F.mse_loss(input, self.target)
         return input
 
-
-
-#4:  风格损失
+#############################################################################################################4:  风格损失
 def gram_matrix(input):
     a, b, c, d = input.size()  # a=batch size(=1)
     # 特征映射 b=number
@@ -96,14 +92,12 @@ class StyleLoss(nn.Module):
         self.loss = F.mse_loss(G, self.target)
         return input
 
-
-#5: 导入模型
+##############################################################################################################5: 导入模型
 cnn = models.vgg19(pretrained=True).features.to(device).eval()
 cnn_normalization_mean = torch.tensor([0.485, 0.456, 0.406]).to(device)
 cnn_normalization_std = torch.tensor([0.229, 0.224, 0.225]).to(device)
-# 创建一个模块来规范化输入图像
-# 这样我们就可以轻松地将它放入nn.Sequential中
-class Normalization(nn.Module):
+
+class Normalization(nn.Module):                        # 创建一个模块来规范化输入图像,这样我们就可以轻松地将它放入nn.Sequential中
     def __init__(self, mean, std):
         super(Normalization, self).__init__()
         # .view the mean and std to make them [C x 1 x 1] so that they can
@@ -114,6 +108,7 @@ class Normalization(nn.Module):
     def forward(self, img):
         # normalize img
         return (img - self.mean) / self.std
+
 # 期望的深度层来计算样式/内容损失：
 content_layers_default = ['conv_4']
 style_layers_default = ['conv_1', 'conv_2', 'conv_3', 'conv_4', 'conv_5']
@@ -171,17 +166,16 @@ def get_style_model_and_losses(cnn, normalization_mean, normalization_std,
 input_img = content_img.clone()
 # 如果您想使用白噪声而取消注释以下行：
 # input_img = torch.randn(content_img.data.size(), device=device)
+
 # 将原始输入图像添加到图中：
 plt.figure()
 imshow(input_img, title='Input Image')
 
-
-#6: 梯度下降
+##############################################################################################################6: 梯度下降
 def get_input_optimizer(input_img):
     # 此行显示输入是需要渐变的参数
     optimizer = optim.LBFGS([input_img.requires_grad_()])
     return optimizer
-
 def run_style_transfer(cnn, normalization_mean, normalization_std,
                        content_img, style_img, input_img, num_steps=300,
                        style_weight=1000000, content_weight=1):

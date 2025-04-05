@@ -9,22 +9,20 @@ from torch.optim import lr_scheduler
 import numpy as np
 import torchvision
 from torchvision import datasets, models, transforms
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
 import time
 import os
 import copy
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 plt.ion()
 #通常在一个很大的数据集上进行预训练得到卷积网络ConvNet, 然后将这个ConvNet的参数作为目标任务的初始化参数或者固定这些参数。
 #实际中，没有人会从零开始（随机初始化）训练完整的卷积网络，迁移学习的两个主要场景：
 # 使用预训练的网络来初始化自己的网络，而不是随机初始化。其他的训练步骤不变。
 # 固定ConvNet除了最后的全连接层外的其他所有层。最后的全连接层被替换成一个新的随机初始化的层，只有新层会被训练。
 
-
-# 1: 加载解压数据
-#这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
-import wget
+##################################################################################################### 1: 导入相关的包和数据
+import wget #这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
 rootDir = data_dir = "/DATA/8_data"
 url = "https://download.pytorch.org/tutorial/hymenoptera_data.zip"
 filePath = rootDir + '/hymenoptera_data.zip'
@@ -38,6 +36,7 @@ extract_path = rootDir
 zip_file.extractall( extract_path )
 zip_file.close()
 
+############################################################################################################## 2:加载数据
 # 训练一个模型来分类蚂蚁ants和蜜蜂bees。训练120张验证75张。小数据集难以范化。迁移学习增强范化。
 data_transforms ={
     'train':
@@ -64,7 +63,7 @@ class_names = image_datasets['train'].classes
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-# 2: 可视化数据
+########################################################################################################### 3: 可视化数据
 def imshow(inp, title=None):
     inp = inp.numpy().transpose((1, 2, 0))
     mean = np.array([0.485, 0.456, 0.406])
@@ -81,7 +80,7 @@ def trainOneBatchData():
     imshow(out, title=[class_names[x] for x in classes])
 
 
-# 3: 训练模型
+############################################################################################################# 4: 训练模型
 def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()
 
@@ -135,7 +134,8 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     return model
 
 
-# 4：模型可视化：一个通用的展示少量预测图片的函数
+################################################################################################### 5：可视化模型的预测结果
+# 一个通用的展示少量预测图片的函数
 def visualize_model(model, num_images=6):
     was_training = model.training
     model.eval()
@@ -162,7 +162,8 @@ def visualize_model(model, num_images=6):
         model.train(mode=was_training)
 
 
-# 5：使用场景1：微调ConvNet，加载预训练模型并重置最终完全连接的图层
+################################################################################################# 6：使用场景1：微调ConvNet
+# 加载预训练模型并重置最终完全连接的图层
 def finetuningConvNet():
     model_ft = models.resnet18(pretrained=True)                                     # 加载预训练模型
     num_ftrs = model_ft.fc.in_features                                              # 获取最后一层的输入特征数
@@ -177,8 +178,8 @@ def finetuningConvNet():
     # 可视化模型，评估效果
     visualize_model(model_ft)
 
-
-# 6：使用场景2：特征提取，加载预训练模型并冻结所有卷积层。ConvNet作为固定特征提取器。
+##################################################################################### 7：使用场景2：ConvNet作为固定特征提取器
+# 特征提取，加载预训练模型并冻结所有卷积层。
 def extractFeatureConvNet():
     model_conv = models.resnet18(pretrained=True)                                   # 加载预训练模型
     for param in model_conv.parameters():                                           # 冻结所有卷积层

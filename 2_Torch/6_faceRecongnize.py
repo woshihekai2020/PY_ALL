@@ -15,7 +15,7 @@ import warnings
 warnings.filterwarnings("ignore")
 plt.ion()
 
-#1: 准备数据
+############################################################################################################ 2: 下载数据集
 import os
 rootDir = './DATA/6_data'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
@@ -30,13 +30,13 @@ zip_file = zipfile.ZipFile(zip_path, 'r')
 extract_path = rootDir
 zip_file.extractall( extract_path )
 zip_file.close()
-
-# 2: 展示数据集
+############################################################################################################# 4: 编写函数
 def show_landmarks( image, landmarks ):                                                #展示一张图片和它对应的标注点作为例子。
     plt.imshow( image )
     plt.scatter(landmarks[:, 0], landmarks[:, 1], s=10, marker='.', c='r')
     plt.pause(3)
-# 3：读取数据集
+
+############################################################################################################ 3：读取数据集
 def readDataSet():                                                  #将csv中的标注点数据读入（N，2）数组中，其中N是特征点的数量。
     landmarks_frame = pd.read_csv( rootDir + "/faces/face_landmarks.csv")
     n = 65
@@ -51,9 +51,10 @@ def readDataSet():                                                  #将csv中�
     show_landmarks( io.imread(os.path.join(rootDir+"/faces/", img_name)),landmarks)
     plt.show()
 
-
-# 2: 为面部数据集创建一个数据集类。landmark face
-class FaceLandmarksDataset( Dataset ):                                                              #"""面部标记数据集."""
+############################################################################################################### 5:数据集类
+# 5.1: 建立数据集类
+class FaceLandmarksDataset( Dataset ):
+    #"""面部标记数据集.""",为面部数据集创建一个数据集类。landmark face
     def __init__( self, csv_file, root_dir, transform= None ):
         self.landmarks_frame = pd.read_csv( csv_file )
         self.root_dir = root_dir
@@ -73,11 +74,10 @@ class FaceLandmarksDataset( Dataset ):                                          
 
         return sample
 
-
-# 3: 数据可视化
-def visiualizeData():                                                                           #：实例化这个类并遍历数据样本。
-    face_dataset = FaceLandmarksDataset( csv_file= rootDir + "/faces/face_landmarks.csv",
-                                         root_dir= rootDir + '/faces/')
+############################################################################################################ 6: 数据可视化
+def visiualizeData():
+    #实例化这个类并遍历数据样本。
+    face_dataset = FaceLandmarksDataset( csv_file= rootDir + "/faces/face_landmarks.csv",root_dir= rootDir + '/faces/')
     fig = plt.figure()
     for i in range( len(face_dataset)):
         sample = face_dataset[i]
@@ -92,9 +92,9 @@ def visiualizeData():                                                           
         if i == 3 :
             plt.show()
             break
-        
-        
-# 4: 数据变换:                                                       绝大多数神经网络都假定图片的尺寸相同。因此我们需要做一些预处理。
+
+############################################################################################################# 7: 数据变换
+# 绝大多数神经网络都假定图片的尺寸相同。因此我们需要做一些预处理。
 class Rescale( object ):                                                                                        #缩放图片
     def __init__(self, output_size):
         assert isinstance( output_size, (int, tuple) )
@@ -150,7 +150,9 @@ class ToTensor(object):                                                         
         image = image.transpose((2, 0, 1))
         return {'image': torch.from_numpy(image), 'landmarks': torch.from_numpy(landmarks)}
 
-def transformGroup():                                         #把图像的短边调整为256，然后随机裁剪(randomcrop)为224大小的正方形。
+############################################################################################################## 8:组合转换
+def transformGroup():
+    #把图像的短边调整为256，然后随机裁剪(randomcrop)为224大小的正方形。
     scale = Rescale(256)
     crop = RandomCrop(128)
     composed = transforms.Compose([Rescale(256),RandomCrop(224)])
@@ -165,11 +167,11 @@ def transformGroup():                                         #把图像的短�
         plt.tight_layout()
         ax.set_title( type(tsfrm).__name__ )
         show_landmarks( **transformed_sample )
-    plt.show( )        
+    plt.show( )
    
-   
-# 5:迭代数据集
-def iterShowDataset():                                                             #把这些整合起来以创建一个带组合转换的数据集。
+############################################################################################################# 9:迭代数据集
+def iterShowDataset():
+    #把这些整合起来以创建一个带组合转换的数据集。
     transformed_dataset = FaceLandmarksDataset( 
                             csv_file = rootDir+'/faces/face_landmarks.csv',
                             root_dir = rootDir+'/faces/',
@@ -180,9 +182,9 @@ def iterShowDataset():                                                          
         #print( i, sample['image'].size() )
         if i == 3:
             break
- 
- 
-# 6:批量迭代数据集                                        简单使用for循环牺牲了许多，使用多线程multiprocessingworker 并行加载数据。
+
+######################################################################################################### 6:批量迭代数据集
+# 简单使用for循环牺牲了许多，使用多线程multiprocessingworker 并行加载数据。
 def batchIterShowDataset():
     transformed_dataset = FaceLandmarksDataset( 
                             csv_file = rootDir+'/faces/face_landmarks.csv',
@@ -212,7 +214,6 @@ def batchIterShowDataset():
             plt.show()
             plt.pause( 3 )
             break
-  
   
 if __name__ == "__main__":
     readDataSet()
