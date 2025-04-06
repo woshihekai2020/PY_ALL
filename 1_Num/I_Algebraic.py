@@ -1,5 +1,7 @@
 import numpy as np
 import math
+
+####################################################################################################### 1:direct methods
 def gaussElimin( a, b ):
     n = len( a )
     for k in range(0, n-1):
@@ -46,7 +48,6 @@ def choleski(a, b):
     for k in range( n-1, -1, -1 ):
         b[k] = (b[k] - np.dot(a[k+1:n, k], b[k+1: n])) / a[k, k]
     return b
-
 
 def LU3(c, d, e, b):
     n = len( d )
@@ -119,7 +120,7 @@ def LUPivot(a, b, tol=1.0e-12):
         x[k] = (x[k] - np.dot(a[k, k+1:n], x[k+1: n])) / a[k, k]
     return x
 
-
+#################################################################################################### 2:iterative methods
 def gaussSeidel( iterEqs, x, tol= 1.0e-9 ):
     omega = 1.0
     k = 10
@@ -150,8 +151,7 @@ def conjGrad(Av, x, b, tol= 1.0e-9):
             s = r + beta * s
     return x, i
 
-
-#### EXP
+################################################################################################################## 3:EXP
 def ExpCmp():
     def vandermode( v ):
         n = len( v )
@@ -193,7 +193,6 @@ def ExpLU3():
     e = c.copy()
     x = LU3(c, d, e, b )
     print( '\nx = \n', x )
-
 #not run
 def ExpMatInvLU():
     def matInv( a ):
@@ -242,12 +241,11 @@ def ExpConjGrad():
 
 
 if __name__ == "__main__":
-    #ExpCmp()
+    #ExpCmp()           #campare Gauss and LU
     #ExpCholeski()
 
     #ExpLU3()
     #ExpMatInvLU()
-
 
     #ExpGaussSeidel()
     ExpConjGrad()

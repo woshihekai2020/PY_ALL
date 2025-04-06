@@ -14,9 +14,9 @@ from torchvision import transforms, utils
 import warnings
 warnings.filterwarnings("ignore")
 plt.ion()
+import os
 
 ############################################################################################################ 2: 下载数据集
-import os
 rootDir = './DATA/6_data'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
 import wget #这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
@@ -30,6 +30,7 @@ zip_file = zipfile.ZipFile(zip_path, 'r')
 extract_path = rootDir
 zip_file.extractall( extract_path )
 zip_file.close()
+
 ############################################################################################################# 4: 编写函数
 def show_landmarks( image, landmarks ):                                                #展示一张图片和它对应的标注点作为例子。
     plt.imshow( image )

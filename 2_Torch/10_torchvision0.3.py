@@ -134,7 +134,6 @@ def modify_model_add_backbone():
     model = FasterRCNN(backbone, num_classes=2, rpn_anchor_generator=anchor_generator, box_roi_pool=roi_pooler)
     return model
 
-
 ################################################################################################################# 4: 整合
 # 4.1 为数据扩充/转换编写辅助函数
 import part_10_transforms as T

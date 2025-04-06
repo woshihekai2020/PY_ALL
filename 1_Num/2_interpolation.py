@@ -5,8 +5,7 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import math
 
-
-#newton method
+######################################################################################################## 1:newton method
 def evalPoly(a, xData, x):
     n = len(xData) - 1
     p = a[n]
@@ -31,15 +30,12 @@ def ExpNewton():
         print( "{:3.1f} {:9.5f} {:9.5f}".format(x, y, yExact) )
     input( "\n Press return to exit" )
 
-
-
-#neville & rational
+################################################################################################### 2:neville & rational
 def neville(xData, yData, x):
     m = len(xData)
     y = yData.copy()
     for k in range(1, m):
-        y[0: m-k] = ((x - xData[k: m]) * y[0: m-k] + \
-                    (xData[0: m-k] - x) * y[1: m-k+1]) / (xData[0: m-k] - xData[k: m])
+        y[0: m-k] = ((x - xData[k: m]) * y[0: m-k] + (xData[0: m-k] - x) * y[1: m-k+1]) / (xData[0: m-k] - xData[k: m])
     return y[0]
 def rational(xData, yData, x):
     m = len(xData)
@@ -71,9 +67,7 @@ def ExpCmpNevilleRational():
     plt.show()
     input( '\n Press return to exit')
 
-
-
-#Cubic method
+######################################################################################################### 3:Cubic method
 def LUdecomp3(c, d, e):
     n = len( d )
     for k in range(1, n):
@@ -127,8 +121,6 @@ def ExpCubic():
         except SyntaxError: break
         print( "y = ", evalSpline(xData, yData, k ,x) )
     input( "Done, Press return to exit")
-
-
 
 if __name__=="__main__":
     #ExpNewton()

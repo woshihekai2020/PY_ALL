@@ -12,7 +12,6 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 plt.ion()   # 交互模式
-
 import os
 rootDir = './DATA/12_data/'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
@@ -114,7 +113,6 @@ def train(epoch):
 #
 # 一种简单的测试程序，用于测量STN在MNIST上的性能。.
 #
-
 def test():
     with torch.no_grad():
         model.eval()

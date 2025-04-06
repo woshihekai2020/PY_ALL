@@ -36,7 +36,6 @@ extract_path = rootDir
 zip_file.extractall( extract_path )
 zip_file.close()
 
-
 ######################################################################################################## 3: 输入并训练模型
 # 顶级数据目录。 这里我们假设目录的格式符合ImageFolder结构
 data_dir = rootDir + "/hymenoptera_data"

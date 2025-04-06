@@ -22,6 +22,7 @@ url = "https://download.pytorch.org/models/tutorials/4000_checkpoint.tar"
 filePath = rootDir + '/4000_checkpoint.tar'
 if ( not os.path.isfile( filePath ) ):
     wget.download(url, filePath )
+
 ############################################################################################################# 2: 预备环境
 device = torch.device( "cpu" )
 MAX_LENGTH = 10 # 最大句子长度

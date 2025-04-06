@@ -5,7 +5,7 @@ matplotlib.use( 'TkAgg' )
 import matplotlib.pyplot as plt
 import I_Algebraic as I
 
-#gradient descent
+##################################################################################################### 1:gradient descent
 def gradientFunc( theta, x, y ):
     diff = np.dot(x, theta) - y
     return (1./20) * np.dot( np.transpose(x), diff )
@@ -17,9 +17,7 @@ def gradientDescent(x, y, alpha):
         gradient = gradientFunc(theta, x, y)
     return theta
 
-
-
-#least square fit
+##################################################################################################### 2:least square fit
 def fun2ploy(x, n):
     lens = len( x )
     X = np.ones( [1, lens] )
@@ -40,9 +38,7 @@ def least_seq(x, y, ploy_dim):
 
     return y_est, coef
 
-
-
-#ploy fit
+############################################################################################################# 3:ploy fit
 def polyFit(xData, yData, m):
     a = np.zeros( (m+1, m+1) )
     b = np.zeros(m + 1)
@@ -90,7 +86,7 @@ def plotPoly(xData, yData, coeff, xlab= 'x', ylab= 'y'):
     plt.grid( True )
     plt.show()
 
-
+################################################################################################################## 4:EXP
 def ExpGradDescent():
     m = 20
     x0 = np.ones( (m, 1) )
