@@ -8,6 +8,8 @@ import matplotlib
 matplotlib.use( 'TkAgg' )
 import matplotlib.pyplot as plt
 import numpy as np
+import torch.nn as nn               #3
+import torch.nn.functional as F     #3
 #对于视觉，我们已经创建了一个叫做 totchvision 的包，该包含有支持加载类似
 #Imagenet，CIFAR10，MNIST 等公共数据集的数据加载模块 torchvision.datasets 和
 #支持加载图像数据数据转换模块 torch.utils.data.DataLoader。
@@ -15,11 +17,12 @@ import numpy as np
 # 它包含十个类别：‘airplane’, ‘automobile’, ‘bird’, ‘cat’, ‘deer’, ‘dog’, ‘frog’, ‘horse’, ‘ship’, ‘truck’。
 # CIFAR-10 中的图像尺寸为33232，也就是RGB的3层颜色通道，每层通道内的尺寸为32*32。
 ########
-rootDir = './DATA/4_data'
+rootDir = './0_DATA/4_data'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
 
-#################################################################### 1: 使用torchvision加载并且归一化CIFAR10的训练和测试数据集
-print("1: load img data")
+############################################################################################################ 1:准备数据集
+# 使用torchvision加载并且归一化CIFAR10的训练和测试数据集
+print("\n1: load img data")
 transform = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 trainset = torchvision.datasets.CIFAR10(root=rootDir, train=True,download=True, transform=transform)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=4,shuffle=True, num_workers=2)
@@ -27,8 +30,9 @@ testset = torchvision.datasets.CIFAR10(root=rootDir, train=False,download=True, 
 testloader = torch.utils.data.DataLoader(testset, batch_size=4,shuffle=False, num_workers=2)
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-################################################################################################# 2: 展示其中的一些训练图片
-print("# 2: show images")
+############################################################################################################# 2: 展示图片
+# 展示其中的一些训练图片
+print("\n# 2: show images")
 def imshow(img):                                                                            # functions to show an image
     img  = img / 2 + 0.5
     npimg = img.numpy()
@@ -40,9 +44,7 @@ imshow(torchvision.utils.make_grid(images))                         # show image
 print( ' '.join('%5s' % classes[labels[j]] for j in range(4) ))     # print labels
 
 ################################################################################################### 3: 定义一个卷积神经网络
-print("# 3: define a model")
-import torch.nn as nn
-import torch.nn.functional as F
+print("\n# 3: define a model")
 class Net( nn. Module ):
     def __init__(self):
         super(Net, self).__init__()
@@ -63,14 +65,14 @@ class Net( nn. Module ):
 net = Net()
 if torch.cuda.is_available() :
     device = torch.device("cuda:0")
-    print( "\n device is cuda:0 \n")
+    print( "  device use cuda:0 \n")
 else:
-    print( "\n device is cpu \n" )
+    print( "  device use cpu \n" )
     device = torch.device("cpu")
 net.to(device)
 
-################################################################################################ 4: 定义一个损失函数和优化器
-print("# 4: define lost function and optimizer")
+################################################################################################### 4: 定义损失函数和优化器
+print("\n# 4: define lost function and optimizer")
 import torch.optim as optim
 criterion = nn.CrossEntropyLoss()                                     # 类交叉熵Cross-Entropy 作损失函数。
 optimizer = optim.SGD( net.parameters(), lr= 0.001, momentum= 0.9 )   # 动量SGD做优化器。
@@ -94,7 +96,7 @@ for epoch in  range(2):                                                         
 print( 'Finished Training\n' )
 
 ######################################################################################### 5: 评估模型网络在整个数据集上的表现
-print("# 5: value the perference of ths model")
+print("\n# 5: value the perference of this model in all data")
 correct = 0
 total = 0
 with torch.no_grad():
@@ -108,6 +110,7 @@ with torch.no_grad():
 print("Accuracy of the network on the 10000 test images: %d %%" %(100 * correct / total))
 
 ############################################################################################## 6：在每个类别上评估模型的性能
+print("\n# 6: value the perference of this model in one category")
 class_correct = list(0. for i in range(10))
 class_total = list(0. for i in range(10))
 with torch.no_grad():

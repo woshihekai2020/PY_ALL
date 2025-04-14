@@ -13,9 +13,10 @@ import re
 import os
 import unicodedata
 import numpy as np
+
 MAX_LENGTH = 10
 ########################################################################################################### 1: 下载数据集
-rootDir = './DATA/9_data'
+rootDir = './0_DATA/9_data'
 os.makedirs(rootDir, exist_ok= True)
 import wget #这里有11种方法，供你用Python下载文件,https://zhuanlan.zhihu.com/p/587382385
 url = "https://download.pytorch.org/models/tutorials/4000_checkpoint.tar"
@@ -33,6 +34,7 @@ EOS_token  = 2
 ############################################################################################################# 3: 模型概述
 
 ############################################################################################################# 4：数据处理
+# 使用Voc对象包含从单词到引索的映射,以及词汇表中的单词总数.
 class Voc:
     def __init__(self, name):
         self.name = name
@@ -232,8 +234,8 @@ class GreedySearchDecoder( torch.jit.ScriptModule ):
         return all_tokens, all_scores
 
 # 8.2：输入评估
-# 接受一个字符串输入语句作为参数，对其进行规范化、计算并输出响应。
 def evaluate(encoder, decoder, searcher, voc, sentence, max_length=MAX_LENGTH):
+    # 接受一个字符串输入语句作为参数，对其进行规范化、计算并输出响应。
     # 格式化输入句子作为批处理
     # words -> indexes
     indexes_batch = [indexesFromSentence(voc, sentence)]

@@ -16,14 +16,14 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 plt.ion()
-#通常在一个很大的数据集上进行预训练得到卷积网络ConvNet, 然后将这个ConvNet的参数作为目标任务的初始化参数或者固定这些参数。
 #实际中，没有人会从零开始（随机初始化）训练完整的卷积网络，迁移学习的两个主要场景：
-# 使用预训练的网络来初始化自己的网络，而不是随机初始化。其他的训练步骤不变。
-# 固定ConvNet除了最后的全连接层外的其他所有层。最后的全连接层被替换成一个新的随机初始化的层，只有新层会被训练。
+#  使用预训练的网络来初始化自己的网络，而不是随机初始化。其他的训练步骤不变。
+#  固定ConvNet除了最后的全连接层外的其他所有层。最后的全连接层被替换成一个新的随机初始化的层，只有新层会被训练。
+#通常在一个很大的数据集上进行预训练得到卷积网络ConvNet, 然后将这个ConvNet的参数作为目标任务的初始化参数或者固定这些参数。
 
 ##################################################################################################### 1: 导入相关的包和数据
 import wget #这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
-rootDir = data_dir = "/DATA/8_data"
+rootDir = data_dir = "/0_DATA/8_data"
 url = "https://download.pytorch.org/tutorial/hymenoptera_data.zip"
 filePath = rootDir + '/hymenoptera_data.zip'
 if ( not os.path.isfile( filePath ) ):
@@ -63,6 +63,7 @@ class_names = image_datasets['train'].classes
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ########################################################################################################### 3: 可视化数据
+#可视化部分训练图像,
 def imshow(inp, title=None):
     inp = inp.numpy().transpose((1, 2, 0))
     mean = np.array([0.485, 0.456, 0.406])
@@ -73,15 +74,16 @@ def imshow(inp, title=None):
     if title is not None:
         plt.title(title)
     plt.pause(1)
+#批量制作网格训练数据
 def trainOneBatchData():
     inputs, classes = next(iter(dataloaders['train']))          # 获取一批训练数据
     out = torchvision.utils.make_grid(inputs)                   # 批量制作网格
     imshow(out, title=[class_names[x] for x in classes])
 
 ############################################################################################################# 4: 训练模型
+#通用函数训练模型
 def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()
-
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
 
@@ -91,7 +93,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
         for phase in ['train', 'val']:                              # 每个epoch都有一个训练和验证阶段
             if phase == 'train':
-                scheduler.step()
+                scheduler.step()                                    # 学习速率调整类的对象
                 model.train()                                       # 设置模型为训练模式
             else:
                 model.eval()                                        # 设置模型为评估模式

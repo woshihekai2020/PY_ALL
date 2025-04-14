@@ -4,16 +4,16 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 import os
-os.makedirs('./DATA/5_data', exist_ok= True)    # check dir exist or not?
+os.makedirs('./0_DATA/5_data', exist_ok= True)    # check dir exist or not?
 
-################################################################################################################## 1:参数
+################################################################################################################# 1:参数
 print("# 1:parameters and dataloaders")
 input_size = 5
 output_size = 2
 batch_size = 30
 data_size = 100
 
-################################################################################################################## 2:设备
+############################################################################################################## 2:设备选择
 print("# 2:device select")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
