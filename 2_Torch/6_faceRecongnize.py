@@ -1,4 +1,5 @@
 #https://www.pytorch123.com/ThirdSection/DataLoding/
+#https://github.com/fendouai/PyTorchDocs/blob/master/ThirdSection/DataLoding.md
 #PyTorch之数据加载和处理
 ############################################################################################################ 1:下载安装包
 from __future__ import print_function, division

@@ -199,7 +199,7 @@ if __name__=="__main__":
 
     #finetuningConvNet()              #微调ConvNet
 
-    extractFeatureConvNet()          #固定特征提取器：冻结除最后一层外的所有层。
+    #extractFeatureConvNet()          #固定特征提取器：冻结除最后一层外的所有层。
 
     plt.ioff()
     plt.show()
