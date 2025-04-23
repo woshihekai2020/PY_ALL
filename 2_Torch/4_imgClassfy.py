@@ -6,6 +6,7 @@ import torchvision.transforms as transforms
 import os
 import matplotlib
 matplotlib.use( 'TkAgg' )
+#matplotlib.use( 'Agg' )
 import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn               #3
@@ -40,7 +41,8 @@ def imshow(img):                                                                
     plt.imshow( np.transpose(npimg, (1, 2, 0)) )
     plt.show()
 dataiter = iter( trainloader )                                      # get some random training images
-images, labels = dataiter.next()
+#images, labels = dataiter.next()
+images, labels = next( dataiter )
 imshow(torchvision.utils.make_grid(images))                         # show images
 print( ' '.join('%5s' % classes[labels[j]] for j in range(4) ))     # print labels
 
@@ -117,6 +119,7 @@ class_total = list(0. for i in range(10))
 with torch.no_grad():
     for data in testloader:
         images, labels = data
+        images, labels = images.cuda(), labels.cuda()
         outputs = net(images)
         _, predicted = torch.max(outputs, 1)
         c = (predicted == labels).squeeze()
