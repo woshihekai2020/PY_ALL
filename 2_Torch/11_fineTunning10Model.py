@@ -121,7 +121,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
     model.load_state_dict(best_model_wts)
     return model, val_acc_history
 
-####################################################################################################### 4: 初始化并重塑代码
+####################################################################################################### 4: 初始化并重塑网络
 # 4.1:Resnet
 # 4.1:Alexnet
 # 4.3:VGG

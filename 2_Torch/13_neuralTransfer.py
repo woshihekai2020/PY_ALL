@@ -16,7 +16,7 @@ import os
 rootDir = './DATA/13_data'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
 
-######################################################################################################## 1: 导包并选择设备
+####################################################################################################### 1: 导包并选择设备
 import wget #这里有11种方法，供你用Python下载文件 https://zhuanlan.zhihu.com/p/587382385
 #download from:  https://pytorch.org/tutorials/advanced/neural_style_tutorial.html
 url = "https://pytorch.org/tutorials/_static/img/neural-style/picasso.jpg"
@@ -30,7 +30,7 @@ if ( not os.path.isfile( filePath_dancing ) ):
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-##############################################################################################################2: 加载图片
+#############################################################################################################2: 加载图片
 # 所需的输出图像大小
 imsize = 512 if torch.cuda.is_available() else 128  # use small size if no gpu
 loader = transforms.Compose([
@@ -62,7 +62,7 @@ imshow(style_img, title='Style Image')
 plt.figure()
 imshow(content_img, title='Content Image')
 
-##############################################################################################################3: 内容损失
+#############################################################################################################3: 内容损失
 class ContentLoss(nn.Module):
     def __init__(self, target,):
         super(ContentLoss, self).__init__()
@@ -74,7 +74,7 @@ class ContentLoss(nn.Module):
         self.loss = F.mse_loss(input, self.target)
         return input
 
-#############################################################################################################4:  风格损失
+############################################################################################################4:  风格损失
 def gram_matrix(input):
     a, b, c, d = input.size()  # a=batch size(=1)
     # 特征映射 b=number
@@ -92,7 +92,7 @@ class StyleLoss(nn.Module):
         self.loss = F.mse_loss(G, self.target)
         return input
 
-##############################################################################################################5: 导入模型
+#############################################################################################################5: 导入模型
 cnn = models.vgg19(pretrained=True).features.to(device).eval()
 cnn_normalization_mean = torch.tensor([0.485, 0.456, 0.406]).to(device)
 cnn_normalization_std = torch.tensor([0.229, 0.224, 0.225]).to(device)
@@ -171,63 +171,5 @@ input_img = content_img.clone()
 plt.figure()
 imshow(input_img, title='Input Image')
 
-##############################################################################################################6: 梯度下降
-def get_input_optimizer(input_img):
-    # 此行显示输入是需要渐变的参数
-    optimizer = optim.LBFGS([input_img.requires_grad_()])
-    return optimizer
-def run_style_transfer(cnn, normalization_mean, normalization_std,
-                       content_img, style_img, input_img, num_steps=300,
-                       style_weight=1000000, content_weight=1):
-    """Run the style transfer."""
-    print('Building the style transfer model..')
-    model, style_losses, content_losses = get_style_model_and_losses(cnn,
-        normalization_mean, normalization_std, style_img, content_img)
-    optimizer = get_input_optimizer(input_img)
-
-    print('Optimizing..')
-    run = [0]
-    while run[0] <= num_steps:
-
-        def closure():
-            # 更正更新的输入图像的值
-            input_img.data.clamp_(0, 1)
-
-            optimizer.zero_grad()
-            model(input_img)
-            style_score = 0
-            content_score = 0
-
-            for sl in style_losses:
-                style_score += sl.loss
-            for cl in content_losses:
-                content_score += cl.loss
-
-            style_score *= style_weight
-            content_score *= content_weight
-
-            loss = style_score + content_score
-            loss.backward()
-
-            run[0] += 1
-            if run[0] % 50 == 0:
-                print("run {}:".format(run))
-                print('Style Loss : {:4f} Content Loss: {:4f}'.format(
-                    style_score.item(), content_score.item()))
-                print()
-
-            return style_score + content_score
-
-        optimizer.step(closure)
-
-    # 最后的修正......
-    input_img.data.clamp_(0, 1)
-
-    return input_img
-output = run_style_transfer(cnn, cnn_normalization_mean, cnn_normalization_std, content_img, style_img, input_img)
-plt.figure()
-imshow(output, title='Output Image')
-
-# sphinx_gallery_thumbnail_number = 4
-plt.ioff()
-plt.show()
+#############################################################################################################6: 梯度下降
+S

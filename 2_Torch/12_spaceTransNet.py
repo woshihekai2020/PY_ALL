@@ -7,17 +7,17 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torchvision
 from torchvision import datasets, transforms
+import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-import numpy as np
 plt.ion()   # 交互模式
 import os
 rootDir = './DATA/12_data/'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-############################################################################################################# 1: 加载数据
+############################################################################################################ 1: 加载数据
 # 训练数据集
 train_loader = torch.utils.data.DataLoader(
                     datasets.MNIST( root=rootDir,train=True,download=True,transform=transforms.Compose([transforms.ToTensor(),
@@ -35,7 +35,7 @@ test_loader = torch.utils.data.DataLoader(
                     shuffle=True,
                     num_workers=4)
 
-##################################################################################################### 2: 定义空间变换器网络
+################################################################################################### 2: 定义空间变换器网络
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
@@ -93,7 +93,7 @@ class Net(nn.Module):
 
 model = Net().to(device)
 
-############################################################################################################# 3: 训练模型
+########################################################################################################### 3: 训练模型
 optimizer = optim.SGD(model.parameters(), lr=0.01)
 
 def train(epoch):
@@ -133,7 +133,7 @@ def test():
               .format(test_loss, correct, len(test_loader.dataset),
                       100. * correct / len(test_loader.dataset)))
 
-###################################################################################################### 4: 可视化`STN`结果
+##################################################################################################### 4: 可视化`STN`结果
 def convert_image_np(inp):
     """Convert a Tensor to numpy image."""
     inp = inp.numpy().transpose((1, 2, 0))

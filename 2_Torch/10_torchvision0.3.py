@@ -5,9 +5,19 @@ import wget
 import numpy as np
 import torch
 from PIL import Image
-############################################################################################################ 1:下载数据集
+import torchvision  #微调已训练的模型                                         #3.1
+from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
+from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
+import torchvision                                                          #3.2
+from torchvision.models.detection import FasterRCNN
+from torchvision.models.detection.rpn import AnchorGenerator
+import part_10_transforms as T                                              #4.1
+from part_10_engine import train_one_epoch, evaluate                        #4.2
+import part_10_utils as utils
 rootDir = './DATA/10_data'
 os.makedirs(rootDir, exist_ok= True)
+
+########################################################################################################## 1:下载数据集
 #这里有11种方法，供你用Python下载文件.https://zhuanlan.zhihu.com/p/587382385
 url = "https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip"
 filePath = rootDir + '/PennFudanPed.zip'
@@ -20,7 +30,7 @@ zip_file = zipfile.ZipFile(zip_path, 'r')
 extract_path = rootDir
 zip_file.extractall( extract_path )
 
-######################################################################################################### 2:为数据集编写类
+####################################################################################################### 2:为数据集编写类
 class PennFudanDataset(object):
     def __init__(self, root, transforms):
         self.root = root
@@ -88,11 +98,8 @@ class PennFudanDataset(object):
     def __len__(self):
         return len(self.imgs)
 
-############################################################################################################## 3:定义模型
-# PennFudan 数据集的实例分割模型
-import torchvision  #微调已训练的模型
-from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
-from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
+############################################################################################################ 3:定义模型
+# 3.1: PennFudan 数据集的实例分割模型
 def get_model_instance_segmentation(num_classes): # PennFudan 数据集的实例分割模型
     # 加载在COCO上预训练的预训练的实例分割模型
     model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
@@ -108,10 +115,7 @@ def get_model_instance_segmentation(num_classes): # PennFudan 数据集的实例
     model.roi_heads.mask_predictor = MaskRCNNPredictor(in_features_mask, hidden_layer, num_classes)
     return model
 
-# 修改模型以添加不同的主干
-import torchvision
-from torchvision.models.detection import FasterRCNN
-from torchvision.models.detection.rpn import AnchorGenerator
+# 3.2: 修改模型以添加不同的主干
 def modify_model_add_backbone():
     # 加载预先训练的模型进行分类和返回
     backbone = torchvision.models.mobilenet_v2(pretrained=True).features
@@ -134,9 +138,8 @@ def modify_model_add_backbone():
     model = FasterRCNN(backbone, num_classes=2, rpn_anchor_generator=anchor_generator, box_roi_pool=roi_pooler)
     return model
 
-################################################################################################################# 4: 整合
+############################################################################################################## 4: 整合
 # 4.1 为数据扩充/转换编写辅助函数
-import part_10_transforms as T
 def get_transform(train):
     transforms = []
     transforms.append(T.ToTensor())
@@ -147,11 +150,9 @@ def get_transform(train):
     # 4.2 编写执行训练和验证的主要功能
 
 #4.2 编写执行训练和验证的主要功能
-from part_10_engine import train_one_epoch, evaluate
-import part_10_utils as utils
 def main():
     # 在GPU上训练，若无GPU，可选择在CPU上训练
-    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+    device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
 
     # 我们的数据集只有两个类 - 背景和人
     num_classes = 2

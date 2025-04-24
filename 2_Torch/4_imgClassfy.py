@@ -6,7 +6,6 @@ import torchvision.transforms as transforms
 import os
 import matplotlib
 matplotlib.use( 'TkAgg' )
-#matplotlib.use( 'Agg' )
 import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn               #3
@@ -21,7 +20,7 @@ import torch.nn.functional as F     #3
 rootDir = './0_DATA/4_data'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
 
-####################################################################################################### 1:准备数据集
+########################################################################################################## 1:准备数据集
 # 使用torchvision加载并且归一化CIFAR10的训练和测试数据集
 print("\n1: 准备数据集")  #load img data
 transform = (
@@ -32,7 +31,7 @@ testset = torchvision.datasets.CIFAR10(root=rootDir, train=False,download=True, 
 testloader = torch.utils.data.DataLoader(testset, batch_size=4,shuffle=False, num_workers=2)
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-######################################################################################################### 2: 展示图片
+########################################################################################################### 2: 展示图片
 # 展示其中的一些训练图片
 print("\n# 2: 展示图片")
 def imshow(img):                                                                            # functions to show an image
@@ -46,7 +45,7 @@ images, labels = next( dataiter )
 imshow(torchvision.utils.make_grid(images))                         # show images
 print( ' '.join('%5s' % classes[labels[j]] for j in range(4) ))     # print labels
 
-############################################################################################### 3: 定义一个卷积神经网络
+################################################################################################# 3: 定义一个卷积神经网络
 print("\n# 3: 定义一个卷积神经网络")
 class Net( nn. Module ):
     def __init__(self):
@@ -74,7 +73,7 @@ else:
     device = torch.device("cpu")
 net.to(device)
 
-############################################################################################### 4: 定义损失函数和优化器
+################################################################################################# 4: 定义损失函数和优化器
 print("\n# 4: 定义损失函数和优化器")
 import torch.optim as optim
 criterion = nn.CrossEntropyLoss()                                     # 类交叉熵Cross-Entropy 作损失函数。
@@ -98,7 +97,7 @@ for epoch in  range(2):                                                         
             running_loss = 0.0
 print( 'Finished Training\n' )
 
-##################################################################################### 5: 评估模型网络在整个数据集上的表现
+###################################################################################### 5: 评估模型网络在整个数据集上的表现
 print("\n# 5: 评估模型网络在整个数据集上的表")
 correct = 0
 total = 0
@@ -112,7 +111,7 @@ with torch.no_grad():
         correct += (predicted == labels).sum().item()
 print("Accuracy of the network on the 10000 test images: %d %%" %(100 * correct / total))
 
-########################################################################################## 6：估模型在每个类别上评的性能
+############################################################################################ 6：估模型在每个类别上评的性能
 print("\n# 6: 估模型在每个类别上评的性能")
 class_correct = list(0. for i in range(10))
 class_total = list(0. for i in range(10))

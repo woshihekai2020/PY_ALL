@@ -5,13 +5,13 @@ import torch
 import random
 
 # 本节使用全链接的ReLU网络作为运行示例.使用单一隐藏层,进行梯度下降训练.通过最小化网络输出和结果的欧几里德距离,来拟合随机生成的数据.
-############################################################################################ 1: PyTorch的核心是两个主要特征
+#################################################################################################### 1: 核心两个主要特征
 #一个n维张量，类似于numpy，但可以在GPU上运行
 #搭建和训练神经网络时的自动微分/求导机制
 
-################################################################################################################## 2:张量
+############################################################################################################### 2:张量
 # 2.1:热身:Numpy
-def numpyInfo():                                    # raw循环次数 is 500
+def numpyInfo():
     #科学计算通用框架,自行构建梯度,计算图,深度学习.手动前向和反向传播,拟合随机数据.
     print(" 2.1: Numpy\n")
     N, D_in, H, D_out = 64, 1000, 100, 10           # N是批量大小; D_in是输入维度; H是隐藏层维度; D_out是输出维度
@@ -21,7 +21,7 @@ def numpyInfo():                                    # raw循环次数 is 500
     W2 = np.random.randn( H, D_out )
 
     learing_rate = 1e-6
-    for t in range( 50 ):
+    for t in range( 500 ):
         h = x.dot( W1 )                             # 前向传递：计算预测值y
         h_relu = np.maximum(h, 0)
         y_pred = h_relu.dot( W2 )
@@ -39,27 +39,28 @@ def numpyInfo():                                    # raw循环次数 is 500
         W1 -= learing_rate * grad_w1                # 更新权重:根据学习率
         W2 -= learing_rate * grad_w2
    
-# 2.2: Pytorch:张量，
-def tensorAcc():                                                # raw循环次数 is 500
-    # pytorch概念，类似于numpy，但可以在GPU上运行，获取50倍以上加速。not run on AGX
+# 2.2: Pytorch:张量
+def tensorAcc():
+    # pytorch概念，类似于numpy，但可以在GPU上运行，获取50倍以上加速。
     print(" 2.2: tensorACC\n")
-    dtype = torch.float
+    dtype  = torch.float
     device = torch.device( "cuda:0")
 
     N, D_in, H, D_out = 64, 1000, 100, 10   # N是批量大小; D_in是输入维度; H是隐藏层维度; D_out是输出维度
-    x = torch.randn( N, D_in, device= device, dtype= dtype )    #创建随机输入和输出数据
-    y = torch.randn( N, D_out, device= device, dtype= dtype )
-    W1 = torch.randn( D_in, H, device= device, dtype= dtype )   # 随机初始化权重
+    x  = torch.randn( N,  D_in, device= device, dtype= dtype )    #创建随机输入和输出数据
+    y  = torch.randn( N, D_out, device= device, dtype= dtype )
+    W1 = torch.randn( D_in,  H, device= device, dtype= dtype )   # 随机初始化权重
     W2 = torch.randn( H, D_out, device= device, dtype= dtype )
 
     learning_rate = 1e-6
-    for t in range( 50 ):
+    for t in range( 500 ):
         h = x.mm( W1 )                                          # 前向传递：计算预测y
         h_relu = h.clamp( min= 0 )
         y_pred = h_relu.mm( W2 )
 
         loss = (y_pred - y).pow(2).sum().item()                 # 评估损失:计算和打印损失
-        print(t, dtype(loss) )
+        #print(t, dtype(loss) )
+        print(t, loss)
 
         grad_y_pred = 2.0 * (y_pred - y)                        # 反向传播:方向传播计算w1和w2相对于损耗的梯度
         grad_w2 = h_relu.t().mm( grad_y_pred )
@@ -71,7 +72,7 @@ def tensorAcc():                                                # raw循环次�
         W1 -= learning_rate * grad_w1                           # 更新权重:使用梯度下降更新权重
         W2 -= learning_rate * grad_w2
 
-############################################################################################################## 3：自动求导
+########################################################################################################### 3：自动求导
 # 3.1:Pytorch:张量和自动求导,# not run on AGX
 def autoGrad():
     #调用库函数,反向传播,自动计算梯度.
@@ -147,14 +148,14 @@ def selfDefineAutoGrad():
 # 3.3: 静态图与动态图：TensorFlow static graph. like autoGrad in pytorch
 # pytorch与tensorflow的区别在于，pytorch是动态图，tensorflow是静态图。本例使用tensorflow，无法运行。
 
-################################################################################################################ 4:nn模块
+############################################################################################################# 4:nn模块
 # 4.1 PyTorch：nn
 def infoNNmodule():
     # autograde过于底层, nn包中定义一组大致等价于层的模块。输入tensor输出tensor。也定义了一组损失函数，用以训练神经网络。
     print(" 4.1: use NN module in pytorch\n")
-    N, D_in, H, D_out = 64, 1000, 100, 10                       # N是批量大小; D_in是输入维度; H是隐藏层维度; D_out是输出维度
-    x = torch.randn( N, D_in )                                  # 输入
-    y = torch.randn( N, D_out )                                 # 输出
+    N, D_in, H, D_out = 64, 1000, 100, 10                      # N是批量大小; D_in是输入维度; H是隐藏层维度; D_out是输出维度
+    x = torch.randn( N, D_in )                                 # 输入
+    y = torch.randn( N, D_out )                                # 输出
 
     # 使用nn包将我们的模型定义为一系列的层。按顺序应用这些模块来产生其输出。
     model = torch.nn.Sequential( torch.nn.Linear(D_in, H), torch.nn.ReLU(), torch.nn.Linear(H, D_out) )
@@ -277,16 +278,16 @@ def pytorchControlFlow():
         optimizer.step()      
       
 if __name__ == "__main__":
-    numpyInfo()
-    #tensorAcc()    # not run on AGX, cuda:0 is not available
+    #numpyInfo()                # 2.1: numpy
+    #tensorAcc()                # 2.2: tensor
     
-    #autoGrad()     # not run on AGX, cuda:0 is not available
-    #selfDefineAutoGrad()
+    autoGrad()                  # 3.1: 张量与自动求导
+    #selfDefineAutoGrad()       # 3.2: 定义新的自动求导函数
     
-    #TensorFlow static graph
+    #TensorFlow static graph    # ts使用静态图,pytorch使用动态图,区别是什么?
     
-    #infoNNmodule()
-    #infoOptim()
+    #infoNNmodule()             # 4.1: pytorch的nn模块
+    #infoOptim()                # 4.2: pytorch的optim模块
     
-    #selfDefineNNmodule()
-    #pytorchControlFlow()
+    #selfDefineNNmodule()       # 4.3: 自定义nn模块
+    #pytorchControlFlow()       # 4.4: 控制流与权重共享

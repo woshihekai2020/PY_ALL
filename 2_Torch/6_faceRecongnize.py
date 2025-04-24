@@ -1,7 +1,8 @@
 #https://www.pytorch123.com/ThirdSection/DataLoding/
 #https://github.com/fendouai/PyTorchDocs/blob/master/ThirdSection/DataLoding.md
 #PyTorch之数据加载和处理
-######################################################################################################### 1:下载安装包
+
+########################################################################################################### 1:下载安装包
 from __future__ import print_function, division
 import os
 import torch
@@ -17,7 +18,7 @@ matplotlib.use('TkAgg')
 warnings.filterwarnings("ignore")
 plt.ion()
 
-######################################################################################################## 2: 下载数据集
+########################################################################################################## 2: 下载数据集
 rootDir = './0_DATA/6_data'
 os.makedirs(rootDir, exist_ok= True)    # check dir exist or not?
 import wget #这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
@@ -34,14 +35,14 @@ extract_path = rootDir
 zip_file.extractall( extract_path )
 zip_file.close()
 
-######################################################################################################### 4: 编写函数
+############################################################################################################ 4: 编写函数
 # 展示一张图片和它对应的标注点作为例子
 def show_landmarks( image, landmarks ):
     plt.imshow( image )
     plt.scatter(landmarks[:, 0], landmarks[:, 1], s=10, marker='.', c='r')
     plt.pause(3)
 
-######################################################################################################## 3：读取数据集
+########################################################################################################## 3：读取数据集
 # 将csv中的标注点数据读入（N，2）数组中，其中N是特征点的数量。
 def readDataSet():
     print("\n\n\n\n 3：读取数据集")
@@ -54,11 +55,11 @@ def readDataSet():
     print( 'Image name: {}'.format(img_name) )
     print( 'Landmarks shape: {}'.format( img_name ) )
     print( 'First 4 Landmarks {}'.format(landmarks[: 4]) )
-    plt.figure()
+    plt.figure("3：读取数据集")
     show_landmarks( io.imread(os.path.join(rootDir+"/faces/", img_name)),landmarks)
     plt.show()
 
-####################################################################################################### 5:建立数据集类
+######################################################################################################### 5:建立数据集类
 # 为面部数据集创建一个数据集类。landmark face
 class FaceLandmarksDataset( Dataset ):
     #"""面部标记数据集.""",
@@ -81,13 +82,13 @@ class FaceLandmarksDataset( Dataset ):
 
         return sample
 
-######################################################################################################## 6: 数据可视化
-# 实例化这个类并遍历数据样本。
+########################################################################################################## 6: 数据可视化
+# 实例化这个类并遍历数据样本。打印前4个例子并展示标注的特征点
 def visiualizeData():
     print("\n\n\n\n 6: 数据可视化")
     face_dataset = (
         FaceLandmarksDataset( csv_file= rootDir + "/faces/face_landmarks.csv",root_dir= rootDir + '/faces/'))
-    fig = plt.figure()
+    plt.figure("6: 数据可视化")
     for i in range( len(face_dataset)):
         sample = face_dataset[i]
         print(i, sample['image'].shape, sample['landmarks'].shape )
@@ -96,13 +97,14 @@ def visiualizeData():
         plt.tight_layout()
         ax.set_title('Sample #{}'.format(i))
         ax.axis('off')
+
         show_landmarks( **sample)
 
         if i == 3 :
             plt.show()
             break
 
-######################################################################################################### 7: 数据变换
+############################################################################################################ 7: 数据变换
 # 绝大多数神经网络都假定图片的尺寸相同。因此我们需要做一些预处理。
 class Rescale( object ):
     # 缩放图片
@@ -162,7 +164,7 @@ class ToTensor(object):
         image = image.transpose((2, 0, 1))
         return {'image': torch.from_numpy(image), 'landmarks': torch.from_numpy(landmarks)}
 
-########################################################################################################## 8:组合转换
+############################################################################################################ 8: 组合转换
 #  把图像的短边调整为256，然后随机裁剪(randomcrop)为224大小的正方形。
 def transformGroup():
     print("\n\n\n\n 8:组合转换")
@@ -170,7 +172,7 @@ def transformGroup():
     crop = RandomCrop(128)
     composed = transforms.Compose([Rescale(256),RandomCrop(224)])
 
-    fig = plt.figure()
+    fig = plt.figure("8:组合转换")
     face_dataset = FaceLandmarksDataset(csv_file= rootDir+'/faces/face_landmarks.csv',root_dir= rootDir+'/faces/')
     sample = face_dataset[65]
     for i, tsfrm in enumerate( [scale, crop, composed]):
@@ -183,7 +185,7 @@ def transformGroup():
         show_landmarks( **transformed_sample )
     plt.show( )
    
-######################################################################################################### 9:迭代数据集
+########################################################################################################### 9: 迭代数据集
 # 把这些整合起来以创建一个带组合转换的数据集。
 def iterShowDataset():
     print("\n\n\n\n 9:迭代数据集")
@@ -198,7 +200,7 @@ def iterShowDataset():
         if i == 3:
             break
 
-##################################################################################################### 10:批量迭代数据集
+####################################################################################################### 10:批量迭代数据集
 # 简单使用for循环牺牲了许多，使用多线程multiprocessingworker 并行加载数据。
 def batchIterShowDataset():
     print("\n\n\n\n 10:批量迭代数据集")
@@ -233,8 +235,8 @@ def batchIterShowDataset():
             break
   
 if __name__ == "__main__":
-    readDataSet()
-    visiualizeData()
-    transformGroup()
-    iterShowDataset()
-    batchIterShowDataset()      
+    readDataSet()           # 3：读取数据集
+    visiualizeData()        # 6: 数据可视化
+    transformGroup()        # 8: 组合转换
+    iterShowDataset()       # 9: 迭代数据集
+    batchIterShowDataset()  #10: 批量迭代数据集
