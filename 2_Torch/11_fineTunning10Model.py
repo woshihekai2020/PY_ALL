@@ -9,21 +9,21 @@ import numpy as np
 import torchvision
 from torchvision import datasets, models, transforms
 import matplotlib
-matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import time
-import os
 import copy
+import os
+matplotlib.use('TkAgg')
+rootDir = './DATA/11_data'
+os.makedirs(rootDir, exist_ok= True)
 ###################################################################################################### 1: 导包并打印版本号
 print("PyTorch Version: ", torch.__version__)
 print("Torchvision Version: ", torchvision.__version__)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 ############################################################################################################## 2:下载数据
-import os
-rootDir = './DATA/11_data'
-os.makedirs(rootDir, exist_ok= True)
-import wget #这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
+#这里有11种方法，供你用Python下载文件https://zhuanlan.zhihu.com/p/587382385
+import wget
 url = "https://download.pytorch.org/tutorial/hymenoptera_data.zip"
 filePath = rootDir + '/hymenoptera_data.zip'
 if ( not os.path.isfile( filePath ) ):
@@ -273,6 +273,7 @@ def createOptimizer():
     optimizer_ft = optim.SGD(params_to_update, lr=0.001, momentum=0.9)
 
 ######################################################################################################### 7:运行训练和验证
+hist = [] # for 8 use
 def tainAndValidation():
     # 在这步中初始化模型
     model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
