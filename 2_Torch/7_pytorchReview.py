@@ -278,16 +278,16 @@ def pytorchControlFlow():
         optimizer.step()      
       
 if __name__ == "__main__":
-    #numpyInfo()                # 2.1: numpy
-    #tensorAcc()                # 2.2: tensor
+    numpyInfo()                # 2.1: numpy
+    tensorAcc()                # 2.2: tensor
     
     autoGrad()                  # 3.1: 张量与自动求导
-    #selfDefineAutoGrad()       # 3.2: 定义新的自动求导函数
+    selfDefineAutoGrad()       # 3.2: 定义新的自动求导函数
     
     #TensorFlow static graph    # ts使用静态图,pytorch使用动态图,区别是什么?
     
-    #infoNNmodule()             # 4.1: pytorch的nn模块
-    #infoOptim()                # 4.2: pytorch的optim模块
+    infoNNmodule()             # 4.1: pytorch的nn模块
+    infoOptim()                # 4.2: pytorch的optim模块
     
-    #selfDefineNNmodule()       # 4.3: 自定义nn模块
-    #pytorchControlFlow()       # 4.4: 控制流与权重共享
+    selfDefineNNmodule()       # 4.3: 自定义nn模块
+    pytorchControlFlow()       # 4.4: 控制流与权重共享
